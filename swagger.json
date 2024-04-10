@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "version": "1.0.0",
-    "title": "Watter Tracker API",
+    "title": "Water Tracker API",
     "description": "An API documentation for the Watter Tracker API application written on NodeJS",
     "license": {
       "name": "MIT",
@@ -12,8 +12,8 @@
   "consumes": ["application/json", "multiplart/form-data"],
   "produces": ["application/json"],
   "servers": [
-    { "url": "http://localhost:3000/api" },
-    { "url": "https://water-tracker-api.onrender.com/api" }
+    { "url": "https://water-tracker-api.onrender.com/api" },
+    { "url": "http://localhost:3000/api" }
   ],
   "tags": [
     {
