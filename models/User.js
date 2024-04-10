@@ -75,7 +75,6 @@ export default model(
 
       next();
     })
-    /*
     .pre('save', function preCreateAvatar(next) {
       if (this.isNew) {
         const emailHash = cryptoService.generateMd5Hash(this.email);
@@ -85,7 +84,6 @@ export default model(
 
       next();
     })
-    */
     .pre('findOneAndUpdate', function preFindOneAndUpdatePassword(next) {
       const { password } = this.getUpdate();
 

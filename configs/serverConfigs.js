@@ -5,7 +5,7 @@ const {
   API_URL,
   UI_URL,
   APP_NAME,
-  PORT = 3000,
+  PORT = 3001,
 
   DB_HOST,
   DB_NAME,
@@ -13,7 +13,7 @@ const {
   DB_PASSWORD,
 
   JWT_SECRET,
-  JWT_EXPIRE = '1h',
+  JWT_EXPIRE = '2h',
 
   TEMP_FOLDER = 'temp',
 
