@@ -1,0 +1,21 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - ./database:/data/db
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    command: mongod --quiet --logpath /dev/null
+    logging:
+      driver: "none"
+  backend:
+    build: .
+    ports:
+      - ${PORT}:${PORT}
+    restart: always
+    depends_on: 
+      - mongodb
+    volumes:
+      - .:/usr/src/app
