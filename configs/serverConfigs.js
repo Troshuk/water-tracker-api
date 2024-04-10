@@ -4,6 +4,7 @@ const {
   NODE_ENV: ENV = defaultEnv,
   API_URL,
   UI_URL,
+  APP_NAME,
   PORT = 3000,
 
   DB_HOST,
@@ -53,6 +54,7 @@ export default {
   APP: {
     PORT,
     UI_URL,
+    APP_NAME,
     BASE_API_URL: IS_PROD ? `${API_URL}/api` : `${API_URL}:${PORT}/api`,
     API_URL: IS_PROD ? API_URL : `${API_URL}:${PORT}`,
 
