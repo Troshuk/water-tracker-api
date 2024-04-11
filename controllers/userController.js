@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 
-import catchErrors from '../decorators/catchErrors.js';
+import catchErrors from '../decorators/catchErrors';
 import HttpError from '../helpers/HttpError.js';
 import userService from '../services/modelServices/UserService.js';
 import { transformUser } from '../transformers/userTransformer.js';
