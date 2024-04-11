@@ -3,11 +3,13 @@ import { model } from 'mongoose';
 import BaseSchema from './BaseSchema.js';
 import cryptoService from '../services/cryptoService.js';
 import jwtService from '../services/jwtService.js';
+import { genderOptions } from '../constants/userConstants.js';
 
 export default model(
   'user',
   new BaseSchema(
     {
+      name: String,
       email: {
         type: String,
         unique: true,
@@ -21,6 +23,11 @@ export default model(
       token: {
         type: String,
         default: null,
+      },
+      gender: {
+        type: String,
+        enum: Object.values(genderOptions),
+        required: [true, 'Gender is required'],
       },
       avatarURL: String,
       passwordResetToken: { type: String, select: false },

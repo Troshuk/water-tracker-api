@@ -10,6 +10,7 @@ import {
   createUserSchema,
   requireEmailSchema,
   updatePasswordSchema,
+  updateUserSchema,
 } from '../validationSchemas/userSchemas.js';
 import {
   authenticateUser,
@@ -19,6 +20,7 @@ import {
   removeToken,
   resendVerifiation,
   updatePassword,
+  updateUser,
   updateUserAvatar,
   verifyUser,
 } from '../controllers/userController.js';
@@ -52,7 +54,10 @@ router.use(validateAuth);
 
 router.post('/logout', removeToken);
 
-router.get('/current', getCurrentUser);
+router
+  .route('/current')
+  .get(getCurrentUser)
+  .patch(validateBody(updateUserSchema), updateUser);
 
 router.patch(
   '/avatar',

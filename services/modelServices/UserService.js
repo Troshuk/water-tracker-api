@@ -38,7 +38,7 @@ class UserService extends BaseModelService {
   async authenticateUser(email, password) {
     const user = await this.find({ email }, '+password +verified');
 
-    if (!user || !user.validatePassword(password)) {
+    if (!user || !this.validateUsersPassword(user, password)) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
         'Email or password is wrong'
@@ -98,6 +98,12 @@ class UserService extends BaseModelService {
 
     return user.createVerificationToken();
   }
+
+  validateUsersPassword(user, password) {
+    return user.validatePassword(password);
+  }
+
+  
 }
 
 export default new UserService(User);

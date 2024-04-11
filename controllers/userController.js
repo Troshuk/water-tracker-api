@@ -83,7 +83,28 @@ export const updateUserAvatar = catchErrors(async (req, res) => {
 
   await fileService.removeFile(path);
 
-  const user = await userService.updateOrFail(getUserId(req), { avatarURL });
+  const user = await userService.update(getUserId(req), { avatarURL });
+
+  res.json(transformUser(user));
+});
+
+export const updateUser = catchErrors(async (req, res) => {
+  const { old_password } = req.body;
+
+  // If we are updating password check if old password is valid
+  if (old_password) {
+    if (!userService.validateUsersPassword(req.user, old_password)) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        'Your old password is incorrect'
+      );
+    }
+
+    // Remove it from the request body
+    delete req.body.old_password;
+  }
+
+  const user = await userService.update(getUserId(req), req.body);
 
   res.json(transformUser(user));
 });

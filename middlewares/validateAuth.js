@@ -19,7 +19,7 @@ export default catchErrors(async (req, _, next) => {
   }
 
   const id = jwtService.checkToken(token);
-  const user = await usersServices.findById(id);
+  const user = await usersServices.findById(id, '+password');
 
   if (!user || user.token !== token) {
     throw new HttpError(StatusCodes.UNAUTHORIZED, 'Not authorized');

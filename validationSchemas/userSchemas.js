@@ -1,16 +1,20 @@
 import Joi from 'joi';
-import { passwordRegex } from '../constants/userConstants.js';
+import { genderOptions, passwordRegex } from '../constants/userConstants.js';
 
 const emailOptions = { minDomainSegments: 2, tlds: { allow: ['com', 'net'] } };
 
 const user = {
+  name: Joi.string(),
   email: Joi.string().email(emailOptions),
   password: Joi.string().regex(passwordRegex),
+  gender: Joi.string().valid(...Object.values(genderOptions)),
 };
 
 export const createUserSchema = Joi.object({
+  ...user,
   email: user.email.required(),
   password: user.password.required(),
+  gender: user.gender.required(),
 });
 
 export const authenticateUserSchema = Joi.object({
@@ -18,7 +22,16 @@ export const authenticateUserSchema = Joi.object({
   password: user.password.required(),
 });
 
-export const updateUserSchema = Joi.object(user);
+export const updateUserSchema = Joi.object({
+  ...user,
+  old_password: user.password.when('password', {
+    is: Joi.exist(),
+    then: Joi.required(),
+    otherwise: Joi.forbidden(),
+  }),
+})
+  .min(1)
+  .message('At least one field must be provided');
 
 export const requireEmailSchema = Joi.object({
   email: user.email.required(),
