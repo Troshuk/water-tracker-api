@@ -29,6 +29,12 @@ export default model(
         enum: Object.values(genderOptions),
         required: [true, 'Gender is required'],
       },
+      dailyNorma: {
+        type: Number,
+        default: 2000,
+        max: 15000,
+        min: 0,
+      },
       avatarURL: String,
       passwordResetToken: { type: String, select: false },
       passwordResetExpire: { type: Date, select: false },

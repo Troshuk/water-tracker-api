@@ -8,6 +8,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from './swagger.json' assert { type: 'json' };
 
 import usersRouter from './routes/userRouter.js';
+import waterRoute from './routes/waterRouter.js';
 import validateAuth from './middlewares/validateAuth.js';
 import globalErrorHandler from './middlewares/globalErrorHandler.js';
 import { envTypes } from './constants/configConstants.js';
@@ -16,7 +17,9 @@ import serverConfigs from './configs/serverConfigs.js';
 const app = express();
 
 const { ENV, PORT } = serverConfigs.APP;
-const { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } = serverConfigs.DB;
+const {
+  DB_HOST, DB_NAME, DB_USER, DB_PASSWORD
+} = serverConfigs.DB;
 
 if (ENV === envTypes.DEVELOPMENT) app.use(morgan('dev'));
 
@@ -26,6 +29,7 @@ app.use(express.json());
 // Unauthenticated routes:
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use('/api/users', usersRouter);
+app.use('/api/water', waterRoute);
 
 // Apply auth middleware
 app.use('/api', validateAuth);
