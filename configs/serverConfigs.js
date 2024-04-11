@@ -28,7 +28,6 @@ const {
   SMTP_PASSWORD,
   SMTP_EMAIL_FROM,
 
-  CRYPTO_IV,
   CRYPTO_KEY,
 } = process.env;
 
@@ -78,7 +77,6 @@ export default {
   },
   SMTP,
   CRYPTO: {
-    IV: CRYPTO_IV,
     KEY: CRYPTO_KEY,
   },
 };

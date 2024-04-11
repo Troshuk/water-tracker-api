@@ -3,10 +3,12 @@ import bcrypt from 'bcryptjs';
 
 import serverConfigs from '../configs/serverConfigs.js';
 
-const { IV, KEY } = serverConfigs.CRYPTO;
+const { KEY } = serverConfigs.CRYPTO;
 
-const algorithm = 'aes256';
-const cipherArgs = [algorithm, KEY, IV];
+const algorithm = 'aes-256-cbc';
+const iv = crypto.randomBytes(16);
+const key = Buffer.from(KEY, 'hex');
+const cipherArgs = [algorithm, key, iv];
 const inEncode = 'utf8';
 const outEncode = 'hex';
 
