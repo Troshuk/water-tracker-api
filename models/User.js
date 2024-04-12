@@ -31,7 +31,6 @@ export default model(
       },
       dailyWaterGoal: {
         type: Number,
-        default: 2000,
         enum: Object.values(waterOptions)
       },
       avatarURL: String,

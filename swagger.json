@@ -182,6 +182,12 @@
         },
         "400": {
           "$ref": "#/components/responses/Error400"
+        },
+        "404": {
+          "$ref": "#/components/responses/Error404"
+        },
+        "500": {
+          "$ref": "#/components/responses/Error500"
         }
       }
     }

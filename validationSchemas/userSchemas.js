@@ -8,7 +8,7 @@ const user = {
   email: Joi.string().email(emailOptions),
   password: Joi.string().regex(passwordRegex),
   gender: Joi.string().valid(...Object.values(genderOptions)),
-  dailyNorma: Joi.number().valid(...Object.values(waterOptions))
+  dailyWaterGoal: Joi.number().valid(...Object.values(waterOptions))
 };
 
 export const createUserSchema = Joi.object({
@@ -43,7 +43,7 @@ export const updatePasswordSchema = Joi.object({
 });
 
 export const waterDailySchema = Joi.object({
-  dailyNorma: user.dailyNorma.required()
+  dailyWaterGoal: user.dailyWaterGoal.required()
 })
   .min(1)
   .message('At least one field must be provided');

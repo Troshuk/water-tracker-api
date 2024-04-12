@@ -7,5 +7,6 @@ export const genderOptions = {
 
 export const waterOptions = {
   MIN: 1,
-  MAX: 15000
+  MAX: 15000,
+  DEFAULT: 2000
 };
