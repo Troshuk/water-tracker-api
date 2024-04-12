@@ -44,6 +44,6 @@ export const updatePasswordSchema = Joi.object({
 
 export const waterDailySchema = Joi.object({
   dailyNorma: user.dailyNorma.required()
-    .min(1)
-    .message('At least one field must be provided')
-});
+})
+  .min(1)
+  .message('At least one field must be provided');

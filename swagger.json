@@ -156,7 +156,7 @@
           "bearerAuth": []
         }
       ],
-      "tags": ["water"],
+      "tags": ["Water"],
       "summary": "Update daily norm of water",
       "requestBody": {
         "required": true,
@@ -164,15 +164,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object",
-              "properties": {
-              "dailyNorma": {
-                "type": "number",
-                "default": 2000,
-                "maximum": 15000,
-                "minimum": 0
-                }
-              }
+              "$ref": "#/components/schemas/LoginRequest"
             }
           }
         }
@@ -182,20 +174,12 @@
           "description": "OK",
           "content": {
             "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-              "dailyNorma": {
-                "type": "number",
-                "default": 2000,
-                "maximum": 15000,
-                "minimum": 0
-                }
+              "schema": {
+                "$ref": "#/components/schemas/LoginResponse"
               }
             }
-            }
           }
-          },
+        },
         "400": {
           "$ref": "#/components/responses/Error400"
         }
@@ -226,6 +210,12 @@
           "name": {
             "type": "string",
             "description": "User's name"
+          },
+          "dailyNorma": {
+            "type": "number",
+            "default": 2000,
+            "maximum": 15000,
+            "minimum": 0
           }
         }
       },
@@ -281,6 +271,12 @@
                 "type": "string",
                 "description": "User's gender",
                 "enum": ["man", "woman"]
+              },
+              "dailyNorma": {
+                "type": "number",
+                "default": 2000,
+                "maximum": 15000,
+                "minimum": 0
               }
             }
           },

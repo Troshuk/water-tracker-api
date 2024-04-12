@@ -18,7 +18,6 @@ import {
   createUser,
   forgotPassword,
   getCurrentUser,
-  rateDaily,
   removeToken,
   resendVerifiation,
   updatePassword,
@@ -70,10 +69,6 @@ router.patch(
 
 // Water
 
-router.patch(
-  '/rate',
-  validateBody(waterDailySchema),
-  rateDaily
-);
+router.patch('/water/goal', validateBody(waterDailySchema), updateUser);
 
 export default router;
