@@ -102,8 +102,6 @@ class UserService extends BaseModelService {
   validateUsersPassword(user, password) {
     return user.validatePassword(password);
   }
-
-  
 }
 
 export default new UserService(User);
