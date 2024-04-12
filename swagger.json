@@ -180,9 +180,6 @@
             }
           }
         },
-        "400": {
-          "$ref": "#/components/responses/Error400"
-        },
         "404": {
           "$ref": "#/components/responses/Error404"
         },
@@ -219,7 +216,6 @@
           },
           "dailyNorma": {
             "type": "number",
-            "default": 2000,
             "maximum": 15000,
             "minimum": 0
           }

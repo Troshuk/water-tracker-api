@@ -31,7 +31,9 @@ export default model(
       },
       dailyWaterGoal: {
         type: Number,
-        enum: Object.values(waterOptions)
+        min: waterOptions.MIN,
+        max: waterOptions.MAX,
+        default: waterOptions.DEFAULT
       },
       avatarURL: String,
       passwordResetToken: { type: String, select: false },
