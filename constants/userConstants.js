@@ -4,3 +4,8 @@ export const genderOptions = {
   MAN: 'man',
   WOMAN: 'woman',
 };
+
+export const waterOptions = {
+  min: 1,
+  max: 15000
+};

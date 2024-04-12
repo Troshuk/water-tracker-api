@@ -7,6 +7,7 @@ import { transformUser } from '../transformers/userTransformer.js';
 import cloudinaryService from '../services/thirdPartyServices/cloudinaryService.js';
 import fileService from '../services/fileService.js';
 import smtpEmailService from '../services/thirdPartyServices/smtpEmailService.js';
+import BaseSchema from '../models/BaseSchema.js';
 
 const getUserId = (req) => req.user._id;
 
@@ -107,4 +108,20 @@ export const updateUser = catchErrors(async (req, res) => {
   const user = await userService.update(getUserId(req), req.body);
 
   res.json(transformUser(user));
+});
+
+export const rateDaily = catchErrors(async (req, res, next) => {
+  const { dailyWaterGoal } = req.body;
+  const { _id } = req.user;
+  const result = await BaseSchema.findByIdAndUpdate(
+    _id,
+    { dailyWaterGoal },
+    { returnDocument: 'after' }
+  );
+  if (!result) {
+    return next(HttpError(404, 'Not found'));
+  }
+  res.json({
+    dailyWaterGoal: result.dailyWaterGoal,
+  });
 });

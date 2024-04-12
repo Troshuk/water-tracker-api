@@ -11,12 +11,14 @@ import {
   requireEmailSchema,
   updatePasswordSchema,
   updateUserSchema,
+  waterDailySchema,
 } from '../validationSchemas/userSchemas.js';
 import {
   authenticateUser,
   createUser,
   forgotPassword,
   getCurrentUser,
+  rateDaily,
   removeToken,
   resendVerifiation,
   updatePassword,
@@ -64,6 +66,14 @@ router.patch(
   imageMiddleware.single('avatar'),
   validateFile('avatar'),
   updateUserAvatar
+);
+
+// Water
+
+router.patch(
+  '/rate',
+  validateBody(waterDailySchema),
+  rateDaily
 );
 
 export default router;

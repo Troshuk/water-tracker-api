@@ -8,7 +8,6 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from './swagger.json' assert { type: 'json' };
 
 import usersRouter from './routes/userRouter.js';
-import waterRoute from './routes/waterRouter.js';
 import validateAuth from './middlewares/validateAuth.js';
 import globalErrorHandler from './middlewares/globalErrorHandler.js';
 import { envTypes } from './constants/configConstants.js';
@@ -29,7 +28,6 @@ app.use(express.json());
 // Unauthenticated routes:
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use('/api/users', usersRouter);
-app.use('/api/water', waterRoute);
 
 // Apply auth middleware
 app.use('/api', validateAuth);
