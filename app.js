@@ -8,6 +8,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from './swagger.json' assert { type: 'json' };
 
 import usersRouter from './routes/userRouter.js';
+import waterRouter from './routes/waterRouter.js';
 import validateAuth from './middlewares/validateAuth.js';
 import globalErrorHandler from './middlewares/globalErrorHandler.js';
 import { envTypes } from './constants/configConstants.js';
@@ -33,6 +34,7 @@ app.use('/api/users', usersRouter);
 app.use('/api', validateAuth);
 
 // Authenticated routes:
+app.use('/api/water', waterRouter);
 
 app.use((_, res) => {
   res.status(StatusCodes.NOT_FOUND).json({ message: 'Route not found' });

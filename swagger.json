@@ -26,7 +26,7 @@
     },
     {
       "name": "Water",
-      "description": "Managing information about consumed water"
+      "description": "Water endpoints"
     }
   ],
   "paths": {
@@ -132,6 +132,45 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      }
+    },
+    "/water/consumption": {
+      "post": {
+        "tags": ["Water"],
+        "summary": "Consumption",
+        "parameters": [],
+        "requestBody": {
+          "description": "consumption of water",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WaterСonsumedRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterСonsumedResponse"
                 }
               }
             }
@@ -288,81 +327,108 @@
             "format": "byte"
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "Bearer": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
-    "responses": {
-      "Error400": {
-        "description": "Bad request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                }
-              },
-              "example": {
-                "message": "\"email\" is required"
-              }
-            }
-          }
-        }
       },
-      "Error404": {
-        "description": "Resource not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                }
-              },
-              "example": {
-                "message": "Route not found"
-              }
-            }
-          }
-        }
-      },
-      "Error500": {
-        "description": "Internal Server Error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                }
-              },
-              "example": {
-                "message": "Internal Server Error"
-              }
-            }
-          }
-        }
-      }
-    },
-    "errors": {
-      "BasicError": {
+      "WaterСonsumedRequest": {
         "type": "object",
+        "required": ["value", "consumed_at"],
         "properties": {
-          "message": {
-            "type": "string"
+          "value": {
+            "type": "number",
+            "description": "Value in milliliters"
+          },
+          "consumed_at": {
+            "type": "string",
+            "description": "At what time was the water drunk",
+            "format": "time"
           }
         },
-        "example": {
-          "message": "Error message"
+        "WaterСonsumedResponse": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "Success message"
+            }
+          },
+          "example": {
+            "message": "The value and time have been entered successfully"
+          }
+        }
+      },
+      "securitySchemes": {
+        "Bearer": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      },
+      "responses": {
+        "Error400": {
+          "description": "Bad request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "message": "\"email\" is required"
+                }
+              }
+            }
+          }
+        },
+        "Error404": {
+          "description": "Resource not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "message": "Route not found"
+                }
+              }
+            }
+          }
+        },
+        "Error500": {
+          "description": "Internal Server Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "message": "Internal Server Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "errors": {
+        "BasicError": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "example": {
+            "message": "Error message"
+          }
         }
       }
     }
