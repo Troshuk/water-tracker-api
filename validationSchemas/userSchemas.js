@@ -8,7 +8,7 @@ const user = {
   email: Joi.string().email(emailOptions),
   password: Joi.string().regex(passwordRegex),
   gender: Joi.string().valid(...Object.values(genderOptions)),
-  dailyWaterGoal: Joi.number().valid(...Object.values(waterOptions))
+  dailyWaterGoal: Joi.number().min(waterOptions.MIN).max(waterOptions.MAX)
 };
 
 export const createUserSchema = Joi.object({
