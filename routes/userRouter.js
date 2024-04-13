@@ -11,6 +11,7 @@ import {
   requireEmailSchema,
   updatePasswordSchema,
   updateUserSchema,
+  waterDailySchema,
 } from '../validationSchemas/userSchemas.js';
 import {
   authenticateUser,
@@ -65,5 +66,9 @@ router.patch(
   validateFile('avatar'),
   updateUserAvatar
 );
+
+// Water
+
+router.patch('/water/goal', validateBody(waterDailySchema), updateUser);
 
 export default router;
