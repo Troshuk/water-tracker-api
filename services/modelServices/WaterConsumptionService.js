@@ -2,11 +2,12 @@ import WaterConsumption from '../../models/WaterConsumption.js';
 import BaseModelService from './BaseModelService.js';
 
 class WaterService extends BaseModelService {
-  addWaterForUser(data) {
-    return this.Model.create(data)
+  addWaterForUser(owner, data) {
+    return this.Model.create({ owner, ...data });
   }
-  getWaterForUserById(data) {
-    return this.Model.findOne(data)
+
+  getWaterForUserById(owner, _id) {
+    return this.Model.findOne({ owner, _id });
   }
 }
 
