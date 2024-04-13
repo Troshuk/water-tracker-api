@@ -23,6 +23,10 @@
     {
       "name": "User",
       "description": "User endpoints"
+    },
+    {
+      "name": "Water",
+      "description": "Managing information about consumed water"
     }
   ],
   "paths": {
@@ -145,6 +149,46 @@
       }
     }
   },
+  "/water/rate": {
+    "patch": {
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "tags": ["Water"],
+      "summary": "Update daily norm of water",
+      "requestBody": {
+        "required": true,
+        "description": "Daily norm of water",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/LoginRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginResponse"
+              }
+            }
+          }
+        },
+        "404": {
+          "$ref": "#/components/responses/Error404"
+        },
+        "500": {
+          "$ref": "#/components/responses/Error500"
+        }
+      }
+    }
+  },
   "components": {
     "schemas": {
       "RegistrationRequest": {
@@ -169,6 +213,11 @@
           "name": {
             "type": "string",
             "description": "User's name"
+          },
+          "dailyNorma": {
+            "type": "number",
+            "maximum": 15000,
+            "minimum": 0
           }
         }
       },
@@ -224,6 +273,12 @@
                 "type": "string",
                 "description": "User's gender",
                 "enum": ["man", "woman"]
+              },
+              "dailyNorma": {
+                "type": "number",
+                "default": 2000,
+                "maximum": 15000,
+                "minimum": 0
               }
             }
           },

@@ -16,7 +16,9 @@ import serverConfigs from './configs/serverConfigs.js';
 const app = express();
 
 const { ENV, PORT } = serverConfigs.APP;
-const { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } = serverConfigs.DB;
+const {
+  DB_HOST, DB_NAME, DB_USER, DB_PASSWORD
+} = serverConfigs.DB;
 
 if (ENV === envTypes.DEVELOPMENT) app.use(morgan('dev'));
 
