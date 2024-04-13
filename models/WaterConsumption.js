@@ -23,7 +23,7 @@ export default model(
             },
         },
         {
-            timestamps: true // включає автоматичне оновлення полів createdAt та updatedAt
+            timestamps: true
         }
     )
 );
