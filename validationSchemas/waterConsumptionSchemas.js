@@ -10,3 +10,9 @@ export const createWaterConsumptionSchema = Joi.object({
   value: waterConsumption.value.required(),
   consumed_at: waterConsumption.consumed_at.required(),
 });
+
+export const updateWaterConsumptionSchema = Joi.object({
+  ...waterConsumption,
+  value: waterConsumption.value,
+  consumed_at: waterConsumption.consumed_at,
+});
