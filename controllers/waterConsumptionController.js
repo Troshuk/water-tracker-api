@@ -11,6 +11,7 @@ export const addWater = catchErrors(async (req, res) => {
 });
 
 export const getWaterById = catchErrors(async (req, res) => {
+  const { id } = req.params;
   const receivedWaterById = await waterService.getWaterForUserById(req.user._id, id);
   if (!receivedWaterById) {
     throw new HttpError(
