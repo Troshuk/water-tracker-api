@@ -26,6 +26,19 @@ class WaterService extends BaseModelService {
 
     return this.getWaterForUserByDateRange(owner, startOfDay, endOfDay);
   }
+
+  getWaterForUserByMonth(owner) {
+    const currentDate = new Date();
+    const startOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(), 1);
+
+    const endOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1, 0, 23, 59, 59, 999);
+
+      return this.getWaterForUserByDateRange(owner, startOfMonth, endOfMonth);
+  }
 }
 
 export default new WaterService(WaterConsumption);
