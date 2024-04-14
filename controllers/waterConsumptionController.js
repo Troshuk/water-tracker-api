@@ -11,11 +11,7 @@ export const addWater = catchErrors(async (req, res) => {
 });
 
 export const getWaterById = catchErrors(async (req, res) => {
-  const receivedWaterById = await waterService.getWaterForUserById(
-    req.user._id,
-    id
-  );
-  console.log(receivedWaterById);
+  const receivedWaterById = await waterService.getWaterForUserById(req.user._id, id);
   if (!receivedWaterById) {
     throw new HttpError(
       StatusCodes.NOT_FOUND,
@@ -29,14 +25,14 @@ export const getWaterToday = catchErrors(async (req, res) => {
   const { dailyWaterGoal } = req.user;
   const { _id: owner } = req.user;
 
-  const waterEntries = await waterService.getWaterForUserByDate(owner);
+  const waterEntries = await waterService.getWaterForUserForToday(owner);
 
-  const totalDaylyWaterConsumption = waterEntries.reduce((acc, entry) => acc + entry.value, 0);
+  const totalDailyWaterConsumption = waterEntries.reduce((acc, entry) => acc + entry.value, 0);
 
-  const consumptionPercentage = Math.round((totalDaylyWaterConsumption / dailyWaterGoal) * 100);
+  const consumptionPercentage = Math.round((totalDailyWaterConsumption / dailyWaterGoal) * 100);
 
-  res.status(StatusCodes.OK).json({
-    consumptionPersentage: `${consumptionPercentage}%`,
-    consumption: waterEntries,
+  res.json({
+    consumptionPersentage: consumptionPercentage,
+    consumption: waterEntries.map(transformWaterConsumption),
   });
 });
