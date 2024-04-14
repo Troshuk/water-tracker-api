@@ -7,6 +7,7 @@ import {
 import {
   addWater,
   deleteWaterById,
+  getAllConsumedWater,
   getWaterById,
   updateConsumedWaterById,
 } from '../controllers/waterConsumptionController.js';
@@ -18,6 +19,7 @@ waterRouter.post(
   validateBody(createWaterConsumptionSchema),
   addWater
 );
+waterRouter.get('/consumption', getAllConsumedWater);
 waterRouter.get('/consumption/:id', validateId, getWaterById);
 waterRouter.delete('/consumption/:id', validateId, deleteWaterById);
 waterRouter.patch(

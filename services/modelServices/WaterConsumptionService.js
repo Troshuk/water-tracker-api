@@ -20,6 +20,10 @@ class WaterService extends BaseModelService {
       runValidators: true,
     });
   }
+
+  getAllListConsumedWater(owner, query = {}) {
+    return this.Model.find({ owner }, query);
+  }
 }
 
 export default new WaterService(WaterConsumption);

@@ -60,3 +60,10 @@ export const updateConsumedWaterById = async (req, res) => {
   }
   res.json(transformWaterConsumption(updatedConsumedWater));
 };
+
+export const getAllConsumedWater = async (req, res) => {
+  const listConsumedWater = await waterService.getAllListConsumedWater(
+    req.user.id
+  );
+  res.json(listConsumedWater);
+};
