@@ -13,6 +13,6 @@ export const createWaterConsumptionSchema = Joi.object({
 
 export const updateWaterConsumptionSchema = Joi.object({
   ...waterConsumption,
-  value: waterConsumption.value,
-  consumed_at: waterConsumption.consumed_at,
-});
+})
+  .min(1)
+  .message('At least one field must be provided!!!');

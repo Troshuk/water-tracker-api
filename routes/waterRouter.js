@@ -6,7 +6,7 @@ import {
 } from '../validationSchemas/waterConsumptionSchemas.js';
 import {
   addWater,
-  deleteWaterById,
+  deleteConsumedWaterById,
   getAllConsumedWater,
   getWaterById,
   updateConsumedWaterById,
@@ -21,7 +21,7 @@ waterRouter.post(
 );
 waterRouter.get('/consumption', getAllConsumedWater);
 waterRouter.get('/consumption/:id', validateId, getWaterById);
-waterRouter.delete('/consumption/:id', validateId, deleteWaterById);
+waterRouter.delete('/consumption/:id', validateId, deleteConsumedWaterById);
 waterRouter.patch(
   '/consumption/:id',
   validateId,

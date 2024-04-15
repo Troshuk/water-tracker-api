@@ -24,30 +24,24 @@ export const getWaterById = catchErrors(async (req, res) => {
   }
   res.json(transformWaterConsumption(receivedWaterById));
 });
-export const deleteWaterById = catchErrors(async (req, res) => {
+export const deleteConsumedWaterById = catchErrors(async (req, res) => {
   const { id } = req.params;
-  const deletedWaterById = await waterService.deleteUsersWaterById(
+  const deleteConsumeddWaterById = await waterService.deleteWaterForUserById(
     req.user._id,
     id
   );
-  if (!deletedWaterById) {
+  if (!deleteConsumeddWaterById) {
     throw new HttpError(
       StatusCodes.NOT_FOUND,
       'Water with current Id not found'
     );
   }
-  res.json(transformWaterConsumption(deletedWaterById));
+  res.json(transformWaterConsumption(deleteConsumeddWaterById));
 });
 
-export const updateConsumedWaterById = async (req, res) => {
-  if (Object.keys(req.body).length === 0) {
-    throw new HttpError(
-      StatusCodes.BAD_REQUEST,
-      'Body must have at least one field'
-    );
-  }
+export const updateConsumedWaterById = catchErrors(async (req, res) => {
   const { id } = req.params;
-  const updatedConsumedWater = await waterService.updateUsersConsumedWaterById(
+  const updatedConsumedWater = await waterService.updateWaterForUserById(
     req.user.id,
     id,
     req.body
@@ -59,11 +53,11 @@ export const updateConsumedWaterById = async (req, res) => {
     );
   }
   res.json(transformWaterConsumption(updatedConsumedWater));
-};
+});
 
-export const getAllConsumedWater = async (req, res) => {
+export const getAllConsumedWater = catchErrors(async (req, res) => {
   const listConsumedWater = await waterService.getAllListConsumedWater(
     req.user.id
   );
   res.json(listConsumedWater);
-};
+});
