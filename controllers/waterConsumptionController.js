@@ -7,57 +7,66 @@ import waterService from '../services/modelServices/WaterConsumptionService.js';
 
 export const addWater = catchErrors(async (req, res) => {
   const addedWater = await waterService.addWaterForUser(req.user._id, req.body);
+
   res.status(StatusCodes.CREATED).json(transformWaterConsumption(addedWater));
 });
 
 export const getWaterById = catchErrors(async (req, res) => {
   const { id } = req.params;
-  const receivedWaterById = await waterService.getWaterForUserById(
+
+  const consumedWater = await waterService.getWaterForUserById(
     req.user._id,
     id
   );
-  if (!receivedWaterById) {
+
+  if (!consumedWater) {
     throw new HttpError(
       StatusCodes.NOT_FOUND,
       'Water with current Id not found'
     );
   }
-  res.json(transformWaterConsumption(receivedWaterById));
+
+  res.json(transformWaterConsumption(consumedWater));
 });
+
 export const deleteConsumedWaterById = catchErrors(async (req, res) => {
   const { id } = req.params;
-  const deleteConsumeddWaterById = await waterService.deleteWaterForUserById(
+
+  const consumedWater = await waterService.deleteWaterForUserById(
     req.user._id,
     id
   );
-  if (!deleteConsumeddWaterById) {
+
+  if (!consumedWater) {
     throw new HttpError(
       StatusCodes.NOT_FOUND,
       'Water with current Id not found'
     );
   }
-  res.json(transformWaterConsumption(deleteConsumeddWaterById));
+
+  res.json(transformWaterConsumption(consumedWater));
 });
 
 export const updateConsumedWaterById = catchErrors(async (req, res) => {
   const { id } = req.params;
-  const updatedConsumedWater = await waterService.updateWaterForUserById(
+
+  const consumedWater = await waterService.updateWaterForUserById(
     req.user.id,
     id,
     req.body
   );
-  if (!updatedConsumedWater) {
+
+  if (!consumedWater) {
     throw new HttpError(
       StatusCodes.NOT_FOUND,
       'Water with current Id not found'
     );
   }
-  res.json(transformWaterConsumption(updatedConsumedWater));
+  res.json(transformWaterConsumption(consumedWater));
 });
 
 export const getAllConsumedWater = catchErrors(async (req, res) => {
-  const listConsumedWater = await waterService.getAllListConsumedWater(
-    req.user.id
-  );
-  res.json(listConsumedWater);
+  const consumedWaterList = await waterService.getAllWater(req.user.id);
+
+  res.json(consumedWaterList.map(transformWaterConsumption));
 });

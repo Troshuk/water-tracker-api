@@ -14,19 +14,16 @@ import {
 
 const waterRouter = express.Router();
 
-waterRouter.post(
-  '/consumption',
-  validateBody(createWaterConsumptionSchema),
-  addWater
-);
-waterRouter.get('/consumption', getAllConsumedWater);
-waterRouter.get('/consumption/:id', validateId, getWaterById);
-waterRouter.delete('/consumption/:id', validateId, deleteConsumedWaterById);
-waterRouter.patch(
-  '/consumption/:id',
-  validateId,
-  validateBody(updateWaterConsumptionSchema),
-  updateConsumedWaterById
-);
+waterRouter
+  .route('/consumption')
+  .post(validateBody(createWaterConsumptionSchema), addWater)
+  .get(getAllConsumedWater);
+
+waterRouter
+  .route('/consumption/:id')
+  .all(validateId)
+  .get(getWaterById)
+  .delete(deleteConsumedWaterById)
+  .patch(validateBody(updateWaterConsumptionSchema), updateConsumedWaterById);
 
 export default waterRouter;

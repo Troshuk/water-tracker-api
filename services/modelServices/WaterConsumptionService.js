@@ -18,7 +18,7 @@ class WaterService extends BaseModelService {
     return this.Model.findOneAndUpdate({ owner, _id }, data);
   }
 
-  getAllListConsumedWater(owner, query = {}) {
+  getAllWater(owner, query = {}) {
     return this.Model.find({ owner }, query);
   }
 }
