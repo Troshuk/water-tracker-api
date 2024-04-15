@@ -9,6 +9,7 @@ import {
   deleteConsumedWaterById,
   getAllConsumedWater,
   getWaterById,
+  getWaterToday,
   updateConsumedWaterById,
 } from '../controllers/waterConsumptionController.js';
 
@@ -25,5 +26,7 @@ waterRouter
   .get(getWaterById)
   .delete(deleteConsumedWaterById)
   .patch(validateBody(updateWaterConsumptionSchema), updateConsumedWaterById);
+
+waterRouter.get('/today', getWaterToday);
 
 export default waterRouter;

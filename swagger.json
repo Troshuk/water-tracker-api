@@ -186,8 +186,33 @@
           }
         }
       }
-    }
-  },
+    },
+    "/water/today": {
+      "get": {
+        "tags": ["Water"],
+        "summary": "Get water consumption for today",
+        "parameters": []
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterСonsumedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      }
+    },
   "/water/rate": {
     "patch": {
       "security": [

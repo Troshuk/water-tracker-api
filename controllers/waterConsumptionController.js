@@ -70,3 +70,24 @@ export const getAllConsumedWater = catchErrors(async (req, res) => {
 
   res.json(consumedWaterList.map(transformWaterConsumption));
 });
+
+export const getWaterToday = catchErrors(async (req, res) => {
+  const { dailyWaterGoal } = req.user;
+  const { _id: owner } = req.user;
+
+  const waterEntries = await waterService.getWaterForUserForToday(owner);
+
+  const totalDailyWaterConsumption = waterEntries.reduce(
+    (acc, entry) => acc + entry.value,
+    0
+  );
+
+  const consumptionPercentage = Math.round(
+    (totalDailyWaterConsumption / dailyWaterGoal) * 100
+  );
+
+  res.json({
+    consumptionPersentage: consumptionPercentage,
+    consumption: waterEntries.map(transformWaterConsumption),
+  });
+});
