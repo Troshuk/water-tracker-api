@@ -10,6 +10,18 @@ class WaterService extends BaseModelService {
     return this.Model.findOne({ owner, _id });
   }
 
+  deleteWaterForUserById(owner, _id) {
+    return this.Model.findOneAndDelete({ owner, _id });
+  }
+
+  updateWaterForUserById(owner, _id, data) {
+    return this.Model.findOneAndUpdate({ owner, _id }, data);
+  }
+
+  getAllWater(owner, query = {}) {
+    return this.Model.find({ owner }, query);
+  }
+
   getWaterForUserByDateRange(owner, fromDate, toDate) {
     return this.Model.find({
       owner,

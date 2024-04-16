@@ -1,10 +1,6 @@
 import express from 'express';
 
-import {
-  validateBody,
-  validateFile,
-  validateId,
-} from '../middlewares/validateRequest.js';
+import { validateBody, validateFile } from '../middlewares/validateRequest.js';
 import {
   authenticateUserSchema,
   createUserSchema,
@@ -29,7 +25,6 @@ import validateAuth from '../middlewares/validateAuth.js';
 import { imageMiddleware } from '../middlewares/fileUploader.js';
 
 const router = express.Router();
-router.param('id', validateId);
 
 router.post('/register', validateBody(createUserSchema), createUser);
 
