@@ -44,7 +44,9 @@ export const getWaterMonth = catchErrors(async (req, res) => {
   const { _id: owner } = req.user;
 
   const startDate = new Date(req.params.startDate);
+
   const endDate = new Date(req.params.endDate);
+  endDate.setHours(23, 59, 59, 999);
 
   const waterEntries = await waterService.getWaterConsumptionStatisticsByDateRange(owner, dailyWaterGoal, startDate, endDate);
   

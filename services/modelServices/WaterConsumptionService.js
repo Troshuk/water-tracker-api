@@ -40,7 +40,7 @@ class WaterService extends BaseModelService {
             $gte: startDate,
             $lte: endDate,
           },
-          owner: owner,
+          owner,
         },
       },
       {
@@ -53,9 +53,11 @@ class WaterService extends BaseModelService {
       {
         $addFields: {
           consumptionPercentage: {
-            $multiply: [{ $divide: ['$totalValue', dailyWaterGoal] }, 100],
+            $trunc: {
+              $multiply: [{ $divide: ['$totalValue', dailyWaterGoal] }, 100]
+            }
           },
-          dailyWaterGoal: dailyWaterGoal,
+          dailyWaterGoal,
         },
       },
       {
