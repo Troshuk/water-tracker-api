@@ -14,7 +14,7 @@ import {
   deleteConsumedWaterById,
   getAllConsumedWater,
   getWaterById,
-  getWaterMonth,
+  getWaterByDateRange,
   getWaterToday,
   updateConsumedWaterById,
 } from '../controllers/waterConsumptionController.js';
@@ -35,9 +35,9 @@ waterRouter
 
 waterRouter.get('/today', getWaterToday);
 waterRouter.get(
-  '/stats-by-date-range/:startDate/:endDate',
+  '/statistics/:startDate/:endDate',
   validateParams(waterConsumptionParamsDayRange),
-  getWaterMonth
+  getWaterByDateRange
 );
 
 export default waterRouter;

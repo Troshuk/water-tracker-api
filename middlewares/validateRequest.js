@@ -26,7 +26,7 @@ export const validateQuery = (schema) =>
     next();
   });
 
-  export const validateParams = (schema) =>
+export const validateParams = (schema) =>
   catchErrors(({ params }, _, next) => {
     const { error } = schema.validate(params);
 
