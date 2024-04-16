@@ -1,6 +1,9 @@
 import { StatusCodes } from 'http-status-codes';
 import HttpError from '../helpers/HttpError.js';
-import { transformWaterConsumption } from '../transformers/waterConsumptionTransformer.js';
+import {
+  transformWaterConsumption,
+  transformWaterConsumptionStatisticsByDateRange,
+} from '../transformers/waterConsumptionTransformer.js';
 
 import catchErrors from '../decorators/catchErrors.js';
 import waterService from '../services/modelServices/WaterConsumptionService.js';
@@ -101,12 +104,13 @@ export const getWaterMonth = catchErrors(async (req, res) => {
   const endDate = new Date(req.params.endDate);
   endDate.setHours(23, 59, 59, 999);
 
-  const waterEntries = await waterService.getWaterConsumptionStatisticsByDateRange(
+  const waterEntries =
+    await waterService.getWaterConsumptionStatisticsByDateRange(
       owner,
       dailyWaterGoal,
       startDate,
       endDate
     );
 
-  res.json(waterEntries);
+  res.json(waterEntries.map(transformWaterConsumptionStatisticsByDateRange));
 });
