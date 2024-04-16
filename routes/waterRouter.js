@@ -1,14 +1,20 @@
 import express from 'express';
-import { validateBody, validateId } from '../middlewares/validateRequest.js';
+import {
+  validateBody,
+  validateId,
+  validateParams,
+} from '../middlewares/validateRequest.js';
 import {
   createWaterConsumptionSchema,
   updateWaterConsumptionSchema,
+  waterConsumptionParamsDayRange,
 } from '../validationSchemas/waterConsumptionSchemas.js';
 import {
   addWater,
   deleteConsumedWaterById,
   getAllConsumedWater,
   getWaterById,
+  getWaterByDateRange,
   getWaterToday,
   updateConsumedWaterById,
 } from '../controllers/waterConsumptionController.js';
@@ -28,5 +34,10 @@ waterRouter
   .patch(validateBody(updateWaterConsumptionSchema), updateConsumedWaterById);
 
 waterRouter.get('/today', getWaterToday);
+waterRouter.get(
+  '/statistics/:startDate/:endDate',
+  validateParams(waterConsumptionParamsDayRange),
+  getWaterByDateRange
+);
 
 export default waterRouter;

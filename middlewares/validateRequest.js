@@ -26,6 +26,17 @@ export const validateQuery = (schema) =>
     next();
   });
 
+export const validateParams = (schema) =>
+  catchErrors(({ params }, _, next) => {
+    const { error } = schema.validate(params);
+
+    if (error) {
+      throw new HttpError(StatusCodes.BAD_REQUEST, error.message, error);
+    }
+
+    next();
+  });
+
 export const validateId = catchErrors(({ params: { id } }, _, next) => {
   if (!isValidObjectId(id)) {
     throw new HttpError(

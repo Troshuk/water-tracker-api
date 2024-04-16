@@ -11,6 +11,11 @@ export const createWaterConsumptionSchema = Joi.object({
   consumed_at: waterConsumption.consumed_at.required(),
 });
 
+export const waterConsumptionParamsDayRange = Joi.object({
+  startDate: Joi.date().iso(),
+  endDate: Joi.date().iso(),
+});
+
 export const updateWaterConsumptionSchema = Joi.object({
   ...waterConsumption,
 })

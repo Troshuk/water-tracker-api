@@ -12,8 +12,8 @@
   "consumes": ["application/json", "multiplart/form-data"],
   "produces": ["application/json"],
   "servers": [
-    { "url": "https://water-tracker-api.onrender.com/api" },
-    { "url": "http://localhost:3001/api" }
+    { "url": "http://localhost:3001/api" },
+    { "url": "https://water-tracker-api.onrender.com/api" }
   ],
   "tags": [
     {
@@ -192,14 +192,99 @@
         "tags": ["Water"],
         "summary": "Get water consumption for today",
         "parameters": []
+      },
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WaterСonsumedResponse"
+              }
+            }
+          }
+        },
+        "404": {
+          "$ref": "#/components/responses/Error404"
+        },
+        "500": {
+          "$ref": "#/components/responses/Error500"
+        }
+      }
+    },
+    "/water/statistics": {
+      "get": {
+        "tags": ["Water"],
+        "summary": "Get water consumption for date range",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "startDate",
+            "required": true,
+            "description": "Start date (format: YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "in": "path",
+            "name": "endDate",
+            "required": true,
+            "description": "End date (format: YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ]
+      },
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WaterСonsumedResponse"
+              }
+            }
+          }
+        },
+        "404": {
+          "$ref": "#/components/responses/Error404"
+        },
+        "500": {
+          "$ref": "#/components/responses/Error500"
+        }
+      }
+    },
+    "/water/rate": {
+      "patch": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Water"],
+        "summary": "Update daily norm of water",
+        "requestBody": {
+          "required": true,
+          "description": "Daily norm of water",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WaterСonsumedResponse"
+                  "$ref": "#/components/schemas/LoginResponse"
                 }
               }
             }
@@ -210,45 +295,6 @@
           "500": {
             "$ref": "#/components/responses/Error500"
           }
-        }
-      }
-    },
-  "/water/rate": {
-    "patch": {
-      "security": [
-        {
-          "bearerAuth": []
-        }
-      ],
-      "tags": ["Water"],
-      "summary": "Update daily norm of water",
-      "requestBody": {
-        "required": true,
-        "description": "Daily norm of water",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/LoginRequest"
-            }
-          }
-        }
-      },
-      "responses": {
-        "200": {
-          "description": "OK",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginResponse"
-              }
-            }
-          }
-        },
-        "404": {
-          "$ref": "#/components/responses/Error404"
-        },
-        "500": {
-          "$ref": "#/components/responses/Error500"
         }
       }
     }

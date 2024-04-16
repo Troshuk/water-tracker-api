@@ -31,12 +31,55 @@ class WaterService extends BaseModelService {
 
   getWaterForUserForToday(owner) {
     const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
+    startOfDay.setUTCHours(0, 0, 0, 0);
 
     const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    endOfDay.setUTCHours(23, 59, 59, 999);
 
     return this.getWaterForUserByDateRange(owner, startOfDay, endOfDay);
+  }
+
+  async getStatisticsByDateRange(owner, dailyWaterGoal, startDate, endDate) {
+    const aggregateResult = await WaterConsumption.aggregate([
+      {
+        $match: {
+          consumed_at: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+          owner,
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$consumed_at' } },
+          count: { $sum: 1 },
+          totalValue: { $sum: '$value' },
+        },
+      },
+      {
+        $addFields: {
+          consumptionPercentage: {
+            $trunc: {
+              $multiply: [{ $divide: ['$totalValue', dailyWaterGoal] }, 100],
+            },
+          },
+          dailyWaterGoal,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          date: '$_id',
+          count: 1,
+          totalValue: 1,
+          consumptionPercentage: 1,
+          dailyWaterGoal: 1,
+        },
+      },
+    ]);
+
+    return aggregateResult;
   }
 }
 
