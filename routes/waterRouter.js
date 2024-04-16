@@ -8,6 +8,6 @@ const waterRouter = express.Router();
 waterRouter.post('/consumption', validateBody(createWaterConsumptionSchema), addWater);
 waterRouter.get('/consumption/:id', validateId, getWaterById);
 waterRouter.get('/today', getWaterToday);
-waterRouter.get('/month', getWaterMonth);
+waterRouter.get('/stats-by-date-range/:startDate/:endDate', getWaterMonth);
 
 export default waterRouter;

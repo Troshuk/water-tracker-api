@@ -43,30 +43,10 @@ export const getWaterMonth = catchErrors(async (req, res) => {
   const { dailyWaterGoal } = req.user;
   const { _id: owner } = req.user;
 
-  const waterEntries = await waterService.getWaterForUserByMonth(owner);
+  const startDate = new Date(req.params.startDate);
+  const endDate = new Date(req.params.endDate);
 
-  const entriesCount = {};
-
-  waterEntries.forEach((entry) => {
-    const dateKey = entry.consumed_at.toISOString().split('T')[0];
-    entriesCount[dateKey] = entriesCount[dateKey] ? entriesCount[dateKey] + 1 : 1;});
-
-  const data = waterEntries.map((entry) => {
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'];
-
-    const month = monthNames[entry.consumed_at.getMonth()];
-    const day = entry.consumed_at.getDate();
-
-    const dateKey = entry.consumed_at.toISOString().split('T')[0];
-    const entriesCountForDate = entriesCount[dateKey] || 0;
-
-    return {
-      date: `${day}, ${month}`,
-      dailyWaterGoal: `${(dailyWaterGoal / 1000).toFixed(1)} L`,
-      consumptionPercentage: `${Math.round((entry.value / dailyWaterGoal) * 100)}`,
-      entriesCount: entriesCountForDate,
-    };
-  });
-  res.json(data);
+  const waterEntries = await waterService.getWaterConsumptionStatisticsByDateRange(owner, dailyWaterGoal, startDate, endDate);
+  
+  res.json(waterEntries);
 });
