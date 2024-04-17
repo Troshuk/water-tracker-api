@@ -1,5 +1,9 @@
 import Joi from 'joi';
-import { genderOptions, passwordRegex, waterOptions } from '../constants/userConstants.js';
+import {
+  genderOptions,
+  passwordRegex,
+  waterOptions,
+} from '../constants/userConstants.js';
 
 const emailOptions = { minDomainSegments: 2, tlds: { allow: ['com', 'net'] } };
 
@@ -8,14 +12,14 @@ const user = {
   email: Joi.string().email(emailOptions),
   password: Joi.string().regex(passwordRegex),
   gender: Joi.string().valid(...Object.values(genderOptions)),
-  dailyWaterGoal: Joi.number().min(waterOptions.MIN).max(waterOptions.MAX)
+  dailyWaterGoal: Joi.number().min(waterOptions.MIN).max(waterOptions.MAX),
 };
 
 export const createUserSchema = Joi.object({
   ...user,
   email: user.email.required(),
   password: user.password.required(),
-  gender: user.gender.required(),
+  gender: user.gender,
 });
 
 export const authenticateUserSchema = Joi.object({
@@ -43,5 +47,5 @@ export const updatePasswordSchema = Joi.object({
 });
 
 export const waterDailySchema = Joi.object({
-  dailyWaterGoal: user.dailyWaterGoal.required()
+  dailyWaterGoal: user.dailyWaterGoal.required(),
 });

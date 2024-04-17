@@ -27,13 +27,13 @@ export default model(
       gender: {
         type: String,
         enum: Object.values(genderOptions),
-        required: [true, 'Gender is required'],
+        default: null,
       },
       dailyWaterGoal: {
         type: Number,
         min: waterOptions.MIN,
         max: waterOptions.MAX,
-        default: waterOptions.DEFAULT
+        default: waterOptions.DEFAULT,
       },
       avatarURL: String,
       passwordResetToken: { type: String, select: false },

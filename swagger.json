@@ -318,7 +318,8 @@
           "gender": {
             "type": "string",
             "description": "User's gender",
-            "enum": ["man", "woman"]
+            "enum": ["man", "woman"],
+            "default": null
           },
           "name": {
             "type": "string",
