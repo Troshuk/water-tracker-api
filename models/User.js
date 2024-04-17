@@ -3,7 +3,10 @@ import { model } from 'mongoose';
 import BaseSchema from './BaseSchema.js';
 import cryptoService from '../services/cryptoService.js';
 import jwtService from '../services/jwtService.js';
-import { genderOptions, waterOptions } from '../constants/userConstants.js';
+import {
+  dailyWaterGoalOptions,
+  genderOptions,
+} from '../constants/userConstants.js';
 
 export default model(
   'user',
@@ -27,13 +30,13 @@ export default model(
       gender: {
         type: String,
         enum: Object.values(genderOptions),
-        required: [true, 'Gender is required'],
+        default: genderOptions.MAN,
       },
       dailyWaterGoal: {
         type: Number,
-        min: waterOptions.MIN,
-        max: waterOptions.MAX,
-        default: waterOptions.DEFAULT
+        min: dailyWaterGoalOptions.MIN,
+        max: dailyWaterGoalOptions.MAX,
+        default: dailyWaterGoalOptions.DEFAULT,
       },
       avatarURL: String,
       passwordResetToken: { type: String, select: false },

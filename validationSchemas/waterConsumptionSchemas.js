@@ -1,7 +1,11 @@
 import Joi from 'joi';
 
+import { waterConsumptionOptions } from '../constants/userConstants.js';
+
 const waterConsumption = {
-  value: Joi.number().min(0).max(5000),
+  value: Joi.number()
+    .min(waterConsumptionOptions.MIN)
+    .max(waterConsumptionOptions.MAX),
   consumed_at: Joi.date().iso(),
 };
 
