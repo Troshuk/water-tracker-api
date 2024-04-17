@@ -34,14 +34,16 @@
       "post": {
         "tags": ["Auth"],
         "summary": "Registration",
-        "parameters": [],
         "requestBody": {
           "description": "Registration's object",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegistrationRequest"
+                "allOf": [
+                  { "required": ["email", "password"] },
+                  { "$ref": "#/components/schemas/UserRequest" }
+                ]
               }
             }
           }
@@ -52,7 +54,219 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
+                  "allOf": [
+                    { "$ref": "#/components/schemas/MessageResponse" },
+                    {
+                      "example": {
+                        "message": "User has been created and email verification has been sent"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      }
+    },
+    "/users/password/forgot": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Password Reset Eamil Request",
+        "requestBody": {
+          "description": "Password Reset object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  { "required": ["email"] },
+                  { "$ref": "#/components/Models/User/Email" }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/MessageResponse" },
+                    {
+                      "example": {
+                        "message": "Password reset was sent via email"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      }
+    },
+    "/users/password/reset/{token}": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Password Update with token from email",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "description": "Password Reset Token From Email",
+            "schema": {
+              "type": "string",
+              "format": "byte"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Password Update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  { "required": ["password"] },
+                  { "$ref": "#/components/Models/User/Password" }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Password Reset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/MessageResponse" },
+                    {
+                      "example": {
+                        "message": "Password has been successfully reset"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      }
+    },
+    "/users/verify": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Resend Verification Email",
+        "requestBody": {
+          "description": "Email resend object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  { "required": ["email"] },
+                  { "$ref": "#/components/Models/User/Email" }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/MessageResponse" },
+                    {
+                      "example": {
+                        "message": "Email verification has been sent"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      }
+    },
+    "/users/verify/{token}": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Verify Email",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "description": "Verification Token From Email",
+            "schema": {
+              "type": "string",
+              "format": "byte"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User was verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/MessageResponse" },
+                    {
+                      "example": {
+                        "message": "Your email has been successfully verified"
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -73,31 +287,62 @@
       "post": {
         "tags": ["Auth"],
         "summary": "Login",
-        "parameters": [],
         "requestBody": {
           "description": "Login Request",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
+                "allOf": [
+                  { "required": ["email", "password"] },
+                  {
+                    "$ref": "#/components/Models/User/Email"
+                  },
+                  {
+                    "$ref": "#/components/Models/User/Password"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
+                  "$ref": "#/components/schemas/AuthResponse"
                 }
               }
             }
           },
           "400": {
             "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Logout",
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
           },
           "404": {
             "$ref": "#/components/responses/Error404"
@@ -109,35 +354,159 @@
       }
     },
     "/users/current": {
-      "post": {
+      "get": {
         "tags": ["Auth"],
-        "summary": "Login",
-        "parameters": [],
+        "summary": "Get currently authenticated user with token",
         "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "Login Request",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
+                  "$ref": "#/components/schemas/AuthResponse"
                 }
               }
             }
           },
           "400": {
             "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      },
+      "patch": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["User"],
+        "summary": "Update User",
+        "requestBody": {
+          "required": true,
+          "description": "Update information about user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      }
+    },
+    "/users/avatar": {
+      "patch": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["User"],
+        "summary": "Update User",
+        "requestBody": {
+          "required": true,
+          "description": "Update information about user",
+          "content": {
+            "multiplart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      }
+    },
+    "/water/goal": {
+      "patch": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["User"],
+        "summary": "Update daily goal of water for user",
+        "requestBody": {
+          "required": true,
+          "description": "Daily goal of water to drink",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  { "required": ["dailyWaterGoal"] },
+                  { "$ref": "#/components/Models/User/DailyWaterGoal" }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
           },
           "404": {
             "$ref": "#/components/responses/Error404"
@@ -151,15 +520,18 @@
     "/water/consumption": {
       "post": {
         "tags": ["Water"],
-        "summary": "Consumption",
-        "parameters": [],
+        "summary": "Create a record of consumed water value",
+        "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "consumption of water",
+          "description": "Specify the amount and exact date and time of the record",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WaterСonsumedRequest"
+                "allOf": [
+                  { "required": ["value", "consumed_at"] },
+                  { "$ref": "#/components/schemas/WaterRequest" }
+                ]
               }
             }
           }
@@ -170,13 +542,175 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WaterСonsumedResponse"
+                  "$ref": "#/components/schemas/WaterResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Water"],
+        "summary": "Get list of all water consumption records",
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WaterResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      }
+    },
+    "/water/consumption/{id}": {
+      "get": {
+        "tags": ["Water"],
+        "summary": "Get one record of consumed water by ID",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of a consumption record",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterResponse"
                 }
               }
             }
           },
           "400": {
             "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Water"],
+        "summary": "Delete one record of consumed water by ID",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of a consumption record",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Water"],
+        "summary": "Update one record of consumed water by ID",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of a consumption record",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Specify the amount and exact date and time of the record",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WaterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
           },
           "404": {
             "$ref": "#/components/responses/Error404"
@@ -190,25 +724,35 @@
     "/water/today": {
       "get": {
         "tags": ["Water"],
-        "summary": "Get water consumption for today",
-        "parameters": []
-      },
-      "responses": {
-        "200": {
-          "description": "Successful operation",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WaterСonsumedResponse"
+        "summary": "Get water consumption statistic information for today",
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/Models/WaterStatistics/ConsumptionPersentage"
+                    },
+                    {
+                      "$ref": "#/components/Models/WaterStatistics/Consumption"
+                    }
+                  ]
+                }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
           }
-        },
-        "404": {
-          "$ref": "#/components/responses/Error404"
-        },
-        "500": {
-          "$ref": "#/components/responses/Error500"
         }
       }
     },
@@ -216,6 +760,7 @@
       "get": {
         "tags": ["Water"],
         "summary": "Get water consumption for date range",
+        "security": [{ "Bearer": [] }],
         "parameters": [
           {
             "in": "path",
@@ -237,57 +782,39 @@
               "format": "date"
             }
           }
-        ]
-      },
-      "responses": {
-        "200": {
-          "description": "Successful operation",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WaterСonsumedResponse"
-              }
-            }
-          }
-        },
-        "404": {
-          "$ref": "#/components/responses/Error404"
-        },
-        "500": {
-          "$ref": "#/components/responses/Error500"
-        }
-      }
-    },
-    "/water/rate": {
-      "patch": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
         ],
-        "tags": ["Water"],
-        "summary": "Update daily norm of water",
-        "requestBody": {
-          "required": true,
-          "description": "Daily norm of water",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/Models/WaterStatistics/Count"
+                    },
+                    {
+                      "$ref": "#/components/Models/WaterStatistics/TotalValue"
+                    },
+                    {
+                      "$ref": "#/components/Models/WaterStatistics/ConsumptionPersentage"
+                    },
+                    {
+                      "$ref": "#/components/Models/User/DailyWaterGoal"
+                    },
+                    {
+                      "$ref": "#/components/Models/WaterStatistics/Date"
+                    }
+                  ]
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
           },
           "404": {
             "$ref": "#/components/responses/Error404"
@@ -300,38 +827,206 @@
     }
   },
   "components": {
-    "schemas": {
-      "RegistrationRequest": {
-        "type": "object",
-        "required": ["email", "password", "gender"],
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "description": "User's password",
-            "format": "password"
-          },
-          "gender": {
-            "type": "string",
-            "description": "User's gender",
-            "enum": ["man", "woman"]
-          },
-          "name": {
-            "type": "string",
-            "description": "User's name"
-          },
-          "dailyNorma": {
-            "type": "number",
-            "maximum": 15000,
-            "minimum": 0
+    "Models": {
+      "User": {
+        "Name": {
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "User's name"
+            }
+          }
+        },
+        "Email": {
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            }
+          }
+        },
+        "Password": {
+          "properties": {
+            "password": {
+              "type": "string",
+              "description": "User's password",
+              "format": "password"
+            }
+          }
+        },
+        "AvatarUrl": {
+          "properties": {
+            "avatarURL": {
+              "type": "string",
+              "description": "User's avarar",
+              "format": "uri"
+            }
+          }
+        },
+        "Gender": {
+          "properties": {
+            "gender": {
+              "type": "string",
+              "description": "User's gender",
+              "enum": ["man", "woman"]
+            }
+          }
+        },
+        "DailyWaterGoal": {
+          "properties": {
+            "dailyWaterGoal": {
+              "type": "integer",
+              "maximum": 15000,
+              "minimum": 1,
+              "default": 2000
+            }
           }
         }
       },
-      "RegistrationResponse": {
+      "Auth": {
+        "Token": {
+          "properties": {
+            "token": {
+              "type": "string",
+              "description": "JWT Token for Bearer Auth",
+              "format": "byte"
+            }
+          }
+        }
+      },
+      "Water": {
+        "Value": {
+          "properties": {
+            "value": {
+              "type": "integer",
+              "maximum": 5000,
+              "minimum": 1,
+              "description": "Value in milliliters"
+            }
+          }
+        },
+        "ConsumedAt": {
+          "properties": {
+            "consumed_at": {
+              "type": "string",
+              "description": "At what time was the water drunk",
+              "format": "date-time"
+            }
+          }
+        }
+      },
+      "WaterStatistics": {
+        "ConsumptionPersentage": {
+          "properties": {
+            "consumptionPersentage": {
+              "type": "integer"
+            }
+          }
+        },
+        "Consumption": {
+          "properties": {
+            "consumption": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/WaterResponse"
+              }
+            }
+          }
+        },
+        "Count": {
+          "properties": {
+            "count": {
+              "type": "integer"
+            }
+          }
+        },
+        "TotalValue": {
+          "properties": {
+            "totalValue": {
+              "type": "integer"
+            }
+          }
+        },
+        "Date": {
+          "properties": {
+            "date": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "UserRequest": {
+        "allOf": [
+          { "type": "object" },
+          {
+            "$ref": "#/components/Models/User/Email"
+          },
+          {
+            "$ref": "#/components/Models/User/Password"
+          },
+          {
+            "$ref": "#/components/Models/User/Gender"
+          },
+          {
+            "$ref": "#/components/Models/User/Name"
+          },
+          {
+            "$ref": "#/components/Models/User/DailyWaterGoal"
+          }
+        ]
+      },
+      "UserResponse": {
+        "allOf": [
+          { "type": "object" },
+          {
+            "$ref": "#/components/Models/User/Name"
+          },
+          {
+            "$ref": "#/components/Models/User/Email"
+          },
+          {
+            "$ref": "#/components/Models/User/AvatarUrl"
+          },
+          {
+            "$ref": "#/components/Models/User/Gender"
+          },
+          {
+            "$ref": "#/components/Models/User/DailyWaterGoal"
+          }
+        ]
+      },
+      "WaterRequest": {
+        "allOf": [
+          { "type": "object" },
+          {
+            "$ref": "#/components/Models/Water/Value"
+          },
+          {
+            "$ref": "#/components/Models/Water/ConsumedAt"
+          }
+        ]
+      },
+      "WaterResponse": {
+        "$ref": "#/components/schemas/WaterRequest"
+      },
+      "AuthResponse": {
+        "allOf": [
+          { "type": "object" },
+          {
+            "properties": {
+              "user": {
+                "$ref": "#/components/schemas/UserResponse"
+              }
+            }
+          },
+          { "$ref": "#/components/Models/Auth/Token" }
+        ]
+      },
+      "MessageResponse": {
         "type": "object",
         "properties": {
           "message": {
@@ -340,165 +1035,125 @@
           }
         },
         "example": {
-          "message": "User has been created and email verification has been sent"
+          "message": "Example of a success message"
         }
       },
-      "LoginRequest": {
-        "type": "object",
-        "required": ["email", "password"],
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "description": "User's password",
-            "format": "password"
-          }
-        }
-      },
-      "LoginResponse": {
+      "Error400": {
         "type": "object",
         "properties": {
-          "user": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "User's name"
-              },
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "format": "email"
-              },
-              "avatarURL": {
-                "type": "string",
-                "description": "User's avarar",
-                "format": "uri"
-              },
-              "gender": {
-                "type": "string",
-                "description": "User's gender",
-                "enum": ["man", "woman"]
-              },
-              "dailyNorma": {
-                "type": "number",
-                "default": 2000,
-                "maximum": 15000,
-                "minimum": 0
-              }
-            }
-          },
-          "token": {
-            "type": "string",
-            "description": "JWT Token for Bearer Auth",
-            "format": "byte"
+          "message": {
+            "type": "string"
           }
+        },
+        "example": {
+          "message": "\"email\" is required"
         }
       },
-      "WaterСonsumedRequest": {
+      "Error401": {
         "type": "object",
-        "required": ["value", "consumed_at"],
         "properties": {
-          "value": {
-            "type": "number",
-            "description": "Value in milliliters"
-          },
-          "consumed_at": {
-            "type": "string",
-            "description": "At what time was the water drunk",
-            "format": "time"
+          "message": {
+            "type": "string"
           }
         },
-        "WaterСonsumedResponse": {
-          "type": "object",
-          "properties": {
-            "message": {
-              "type": "string",
-              "description": "Success message"
-            }
-          },
-          "example": {
-            "message": "The value and time have been entered successfully"
-          }
+        "example": {
+          "message": "Not authorized"
         }
       },
-      "securitySchemes": {
-        "Bearer": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
+      "Error404": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "example": [
+          {
+            "message": "Route not found"
+          },
+          {
+            "message": "Resource not found"
+          }
+        ]
+      },
+      "Error409": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "message": "Email is already in use"
         }
       },
-      "responses": {
-        "Error400": {
-          "description": "Bad request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string"
-                  }
-                },
-                "example": {
-                  "message": "\"email\" is required"
-                }
-              }
-            }
+      "Error500": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
           }
         },
-        "Error404": {
-          "description": "Resource not found",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string"
-                  }
-                },
-                "example": {
-                  "message": "Route not found"
-                }
-              }
-            }
-          }
-        },
-        "Error500": {
-          "description": "Internal Server Error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string"
-                  }
-                },
-                "example": {
-                  "message": "Internal Server Error"
-                }
-              }
+        "example": {
+          "message": "Internal Server Error"
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "responses": {
+      "Error400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error400"
             }
           }
         }
       },
-      "errors": {
-        "BasicError": {
-          "type": "object",
-          "properties": {
-            "message": {
-              "type": "string"
+      "Error401": {
+        "description": "Not authorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error401"
             }
-          },
-          "example": {
-            "message": "Error message"
+          }
+        }
+      },
+      "Error404": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error404"
+            }
+          }
+        }
+      },
+      "Error409": {
+        "description": "Resource already exists",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error409"
+            }
+          }
+        }
+      },
+      "Error500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error500"
+            }
           }
         }
       }

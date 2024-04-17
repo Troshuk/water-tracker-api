@@ -63,7 +63,6 @@ router.patch(
 );
 
 // Water
-
 router.patch('/water/goal', validateBody(waterDailySchema), updateUser);
 
 export default router;

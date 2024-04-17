@@ -1,4 +1,5 @@
 import express from 'express';
+
 import {
   validateBody,
   validateId,
@@ -13,8 +14,8 @@ import {
   addWater,
   deleteConsumedWaterById,
   getAllConsumedWater,
-  getWaterById,
   getWaterByDateRange,
+  getWaterById,
   getWaterToday,
   updateConsumedWaterById,
 } from '../controllers/waterConsumptionController.js';
