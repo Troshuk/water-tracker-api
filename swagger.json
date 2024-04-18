@@ -734,7 +734,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/Models/WaterStatistics/ConsumptionPersentage"
+                      "$ref": "#/components/Models/WaterStatistics/ConsumptionPercentage"
                     },
                     {
                       "$ref": "#/components/Models/WaterStatistics/Consumption"
@@ -797,7 +797,7 @@
                       "$ref": "#/components/Models/WaterStatistics/TotalValue"
                     },
                     {
-                      "$ref": "#/components/Models/WaterStatistics/ConsumptionPersentage"
+                      "$ref": "#/components/Models/WaterStatistics/ConsumptionPercentage"
                     },
                     {
                       "$ref": "#/components/Models/User/DailyWaterGoal"
@@ -917,9 +917,9 @@
         }
       },
       "WaterStatistics": {
-        "ConsumptionPersentage": {
+        "ConsumptionPercentage": {
           "properties": {
-            "consumptionPersentage": {
+            "consumptionPercentage": {
               "type": "integer"
             }
           }
