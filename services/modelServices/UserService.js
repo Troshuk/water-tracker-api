@@ -5,6 +5,9 @@ import User from '../../models/User.js';
 import cryptoService from '../cryptoService.js';
 import BaseModelService from './BaseModelService.js';
 
+const humanDateFormat = (date) =>
+  date.toLocaleString('en-US', { timeZoneName: 'short' });
+
 class UserService extends BaseModelService {
   verifyUserByToken(token) {
     return this.updateOne(
@@ -62,14 +65,23 @@ class UserService extends BaseModelService {
   }
 
   async createPasswordResetToken(email) {
-    const user = await this.find({ email }, '+passwordResetExpire');
+    const user = await this.find({ email }, '+passwordResetExpire +verified');
 
     if (!user) throw new HttpError(StatusCodes.NOT_FOUND);
+
+    if (!user.verified) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Email verification is required to be able to reset your password'
+      );
+    }
 
     if (user.passwordResetExpire && user.passwordResetExpire > Date.now()) {
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
-        'You have already requested password reset and you cannot request it again until current token expires'
+        `You have already requested password reset. You can request it again after: ${humanDateFormat(
+          user.passwordResetExpire
+        )}`
       );
     }
 
@@ -85,7 +97,7 @@ class UserService extends BaseModelService {
   }
 
   async reCreateVerificationToken(email) {
-    const user = await this.find({ email }, '+verified');
+    const user = await this.find({ email }, '+verificationExpire +verified');
 
     if (!user) throw new HttpError(StatusCodes.NOT_FOUND);
 
@@ -93,6 +105,15 @@ class UserService extends BaseModelService {
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
         'Your email has already been verified'
+      );
+    }
+
+    if (user.verificationExpire && user.verificationExpire > Date.now()) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        `You have already requested password reset. You can request it again after: ${humanDateFormat(
+          user.verificationExpire
+        )}`
       );
     }
 

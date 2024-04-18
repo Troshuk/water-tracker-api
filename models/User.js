@@ -69,7 +69,7 @@ export default model(
           const verificationToken = cryptoService.generateToken();
           this.verificationToken = cryptoService.encrypt(verificationToken);
           // Expire in 1 day
-          this.verificationExpire = Date.now() + 24 * 60 * (60 * 1000);
+          this.verificationExpire = Date.now() + 10 * (60 * 1000);
           this.save();
 
           return verificationToken;
