@@ -600,7 +600,7 @@
             "required": true,
             "description": "ID of a consumption record",
             "schema": {
-              "type": "integer"
+              "$ref": "#/components/Models/Water/Id/properties/id"
             }
           }
         ],
@@ -640,7 +640,7 @@
             "required": true,
             "description": "ID of a consumption record",
             "schema": {
-              "type": "integer"
+              "$ref": "#/components/Models/Water/Id/properties/id"
             }
           }
         ],
@@ -680,7 +680,7 @@
             "required": true,
             "description": "ID of a consumption record",
             "schema": {
-              "type": "integer"
+              "$ref": "#/components/Models/Water/Id/properties/id"
             }
           }
         ],
@@ -896,6 +896,16 @@
         }
       },
       "Water": {
+        "Id": {
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "ObjectId",
+              "description": "Unique identifier of the object",
+              "example": "60fb18d743ff280015c4a06d"
+            }
+          }
+        },
         "Value": {
           "properties": {
             "value": {
@@ -1002,6 +1012,9 @@
       "WaterRequest": {
         "allOf": [
           { "type": "object" },
+          {
+            "$ref": "#/components/Models/Water/Id"
+          },
           {
             "$ref": "#/components/Models/Water/Value"
           },
