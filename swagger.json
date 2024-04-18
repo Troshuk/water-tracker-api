@@ -12,8 +12,8 @@
   "consumes": ["application/json", "multiplart/form-data"],
   "produces": ["application/json"],
   "servers": [
-    { "url": "http://localhost:3001/api" },
-    { "url": "https://water-tracker-api.onrender.com/api" }
+    { "url": "https://water-tracker-api.onrender.com/api" },
+    { "url": "http://localhost:3001/api" }
   ],
   "tags": [
     {
