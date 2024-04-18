@@ -8,9 +8,9 @@ import {
 const emailOptions = { minDomainSegments: 2, tlds: { allow: ['com', 'net'] } };
 
 const user = {
-  name: Joi.string(),
+  name: Joi.string().max(32),
   email: Joi.string().email(emailOptions),
-  password: Joi.string().regex(passwordRegex),
+  password: Joi.string().min(8).max(64).regex(passwordRegex),
   gender: Joi.string().valid(...Object.values(genderOptions)),
   dailyWaterGoal: Joi.number()
     .min(dailyWaterGoalOptions.MIN)
