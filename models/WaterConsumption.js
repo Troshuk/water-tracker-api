@@ -2,7 +2,10 @@ import { model } from 'mongoose';
 
 import BaseSchema from './BaseSchema.js';
 import User from './User.js';
-import { waterConsumptionOptions } from '../constants/userConstants.js';
+import {
+  dailyWaterGoalOptions,
+  waterConsumptionOptions,
+} from '../constants/userConstants.js';
 
 export default model(
   'water_consumption',
@@ -22,6 +25,11 @@ export default model(
         type: BaseSchema.Types.ObjectId,
         ref: User.modelName,
         required: [true, "Owner's ID is required"],
+      },
+      dailyWaterGoal: {
+        type: Number,
+        min: dailyWaterGoalOptions.MIN,
+        max: dailyWaterGoalOptions.MAX,
       },
     },
     {

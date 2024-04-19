@@ -38,7 +38,7 @@ class UserService extends BaseModelService {
     );
   }
 
-  async authenticateUser(email, password) {
+  async authenticateUser(email, password, timezone) {
     const user = await this.find({ email }, '+password +verified');
 
     if (!user || !this.validateUsersPassword(user, password)) {
@@ -56,6 +56,9 @@ class UserService extends BaseModelService {
     }
 
     await user.createAuthToken();
+
+    user.timezone = timezone;
+    await user.save();
 
     return user;
   }

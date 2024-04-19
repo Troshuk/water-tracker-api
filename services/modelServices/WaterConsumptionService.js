@@ -18,6 +18,10 @@ class WaterService extends BaseModelService {
     return this.Model.findOneAndUpdate({ owner, _id }, data);
   }
 
+  updateWaterForUser(owner, filter, data) {
+    return this.Model.updateMany({ owner, ...filter }, data);
+  }
+
   getAllWater(owner, query = {}) {
     return this.Model.find({ owner }, query);
   }
@@ -29,42 +33,42 @@ class WaterService extends BaseModelService {
     });
   }
 
-  getWaterForUserForToday(owner) {
-    const startOfDay = new Date();
-    startOfDay.setUTCHours(0, 0, 0, 0);
-
-    const endOfDay = new Date();
-    endOfDay.setUTCHours(23, 59, 59, 999);
-
-    return this.getWaterForUserByDateRange(owner, startOfDay, endOfDay);
+  getWaterForUserForDateTimeRange(owner, fromDate, toDate) {
+    return this.getWaterForUserByDateRange(owner, fromDate, toDate);
   }
 
-  async getStatisticsByDateRange(owner, dailyWaterGoal, startDate, endDate) {
-    const aggregateResult = await WaterConsumption.aggregate([
+  getStatisticsByDateRange(owner, fromDate, toDate, timezone) {
+    return WaterConsumption.aggregate([
       {
         $match: {
           consumed_at: {
-            $gte: startDate,
-            $lte: endDate,
+            $gte: fromDate,
+            $lte: toDate,
           },
           owner,
         },
       },
       {
         $group: {
-          _id: { $dateToString: { format: '%Y-%m-%d', date: '$consumed_at' } },
+          _id: {
+            $dateToString: {
+              format: '%Y-%m-%d',
+              date: '$consumed_at',
+              timezone,
+            },
+          },
           count: { $sum: 1 },
           totalValue: { $sum: '$value' },
+          dailyWaterGoal: { $first: '$dailyWaterGoal' },
         },
       },
       {
         $addFields: {
           consumptionPercentage: {
             $trunc: {
-              $multiply: [{ $divide: ['$totalValue', dailyWaterGoal] }, 100],
+              $multiply: [{ $divide: ['$totalValue', '$dailyWaterGoal'] }, 100],
             },
           },
-          dailyWaterGoal,
         },
       },
       {
@@ -78,8 +82,6 @@ class WaterService extends BaseModelService {
         },
       },
     ]);
-
-    return aggregateResult;
   }
 }
 

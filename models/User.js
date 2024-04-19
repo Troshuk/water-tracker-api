@@ -39,6 +39,10 @@ export default model(
         default: dailyWaterGoalOptions.DEFAULT,
       },
       avatarURL: String,
+      timezone: {
+        type: String,
+        required: [true, 'Timezone is required'],
+      },
       passwordResetToken: { type: String, select: false },
       passwordResetExpire: { type: Date, select: false },
       verified: {
@@ -74,10 +78,10 @@ export default model(
 
           return verificationToken;
         },
-        createAuthToken() {
+        async createAuthToken() {
           this.token = jwtService.signToken(this.id);
 
-          this.save();
+          await this.save();
 
           return this.token;
         },
