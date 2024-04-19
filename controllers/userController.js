@@ -7,6 +7,7 @@ import { transformUser } from '../transformers/userTransformer.js';
 import cloudinaryService from '../services/thirdPartyServices/cloudinaryService.js';
 import fileService from '../services/fileService.js';
 import smtpEmailService from '../services/thirdPartyServices/smtpEmailService.js';
+import WaterConsumptionService from '../services/modelServices/WaterConsumptionService.js';
 
 const getUserId = (req) => req.user._id;
 
@@ -58,8 +59,8 @@ export const updatePassword = catchErrors(async (req, res) => {
 });
 
 export const authenticateUser = catchErrors(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await userService.authenticateUser(email, password);
+  const { email, password, timezone } = req.body;
+  const user = await userService.authenticateUser(email, password, timezone);
 
   res.json({ user: transformUser(user), token: user.token });
 });
@@ -89,7 +90,8 @@ export const updateUserAvatar = catchErrors(async (req, res) => {
 });
 
 export const updateUser = catchErrors(async (req, res) => {
-  const { old_password } = req.body;
+  const { old_password, dailyWaterGoal } = req.body;
+  const { timezone: timeZone } = req.user;
 
   // If we are updating password check if old password is valid
   if (old_password) {
@@ -105,6 +107,22 @@ export const updateUser = catchErrors(async (req, res) => {
   }
 
   const user = await userService.update(getUserId(req), req.body);
+
+  // Once we updated user's daily goal, make sure that all created records for today are upadted too
+  if (dailyWaterGoal) {
+    const currentUsersDate = new Date().toLocaleString('en-US', { timeZone });
+
+    const startDate = new Date(currentUsersDate);
+    startDate.setHours(0, 0, 0, 0);
+
+    await WaterConsumptionService.updateWaterForUser(
+      getUserId(req),
+      {
+        consumed_at: { $gte: startDate },
+      },
+      { dailyWaterGoal }
+    );
+  }
 
   res.json(transformUser(user));
 });

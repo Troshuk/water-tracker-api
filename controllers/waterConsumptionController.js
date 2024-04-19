@@ -9,7 +9,12 @@ import catchErrors from '../decorators/catchErrors.js';
 import waterService from '../services/modelServices/WaterConsumptionService.js';
 
 export const addWater = catchErrors(async (req, res) => {
-  const addedWater = await waterService.addWaterForUser(req.user._id, req.body);
+  const { id, dailyWaterGoal } = req.user;
+
+  const addedWater = await waterService.addWaterForUser(id, {
+    ...req.body,
+    dailyWaterGoal,
+  });
 
   res.status(StatusCodes.CREATED).json(transformWaterConsumption(addedWater));
 });
@@ -75,10 +80,22 @@ export const getAllConsumedWater = catchErrors(async (req, res) => {
 });
 
 export const getWaterToday = catchErrors(async (req, res) => {
-  const { dailyWaterGoal } = req.user;
+  const { dailyWaterGoal, timezone: timeZone } = req.user;
   const { _id: owner } = req.user;
 
-  const water = await waterService.getWaterForUserForToday(owner);
+  const currentUsersDate = new Date().toLocaleString('en-US', { timeZone });
+
+  const startDate = new Date(currentUsersDate);
+  startDate.setHours(0, 0, 0, 0);
+
+  const endDate = new Date(currentUsersDate);
+  endDate.setHours(23, 59, 59, 999);
+
+  const water = await waterService.getWaterForUserForDateTimeRange(
+    owner,
+    startDate,
+    endDate
+  );
 
   const totalConsumed = water.reduce((acc, entry) => acc + entry.value, 0);
 
@@ -89,19 +106,15 @@ export const getWaterToday = catchErrors(async (req, res) => {
 });
 
 export const getWaterByDateRange = catchErrors(async (req, res) => {
-  const { dailyWaterGoal } = req.user;
+  const { timezone } = req.user;
+  const { startDate, endDate } = req.params;
   const { _id: owner } = req.user;
-
-  const startDate = new Date(req.params.startDate);
-
-  const endDate = new Date(req.params.endDate);
-  endDate.setUTCHours(23, 59, 59, 999);
 
   const waterEntries = await waterService.getStatisticsByDateRange(
     owner,
-    dailyWaterGoal,
-    startDate,
-    endDate
+    new Date(startDate),
+    new Date(endDate),
+    timezone
   );
 
   res.json(waterEntries.map(transformWaterConsumptionStatisticsByDateRange));
