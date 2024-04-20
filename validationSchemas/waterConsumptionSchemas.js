@@ -5,7 +5,8 @@ import { waterConsumptionOptions } from '../constants/userConstants.js';
 const waterConsumption = {
   value: Joi.number()
     .min(waterConsumptionOptions.MIN)
-    .max(waterConsumptionOptions.MAX),
+    .max(waterConsumptionOptions.MAX)
+    .label('Amount of water'),
   consumed_at: Joi.date()
     .iso()
     .messages({
