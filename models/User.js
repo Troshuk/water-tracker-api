@@ -39,10 +39,7 @@ export default model(
         default: dailyWaterGoalOptions.DEFAULT,
       },
       avatarURL: String,
-      timezone: {
-        type: String,
-        required: [true, 'Timezone is required'],
-      },
+      timezone: String,
       passwordResetToken: { type: String, select: false },
       passwordResetExpire: { type: Date, select: false },
       verified: {
