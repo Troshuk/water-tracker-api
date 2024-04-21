@@ -5,9 +5,8 @@ import nodemailer from 'nodemailer';
 
 import serverConfigs from '../../configs/serverConfigs.js';
 
-const { BASE_API_URL, APP_NAME } = serverConfigs.APP;
+const { UI_URL, APP_NAME } = serverConfigs.APP;
 const { HOST, USERNAME, PASSWORD, PORT, FROM } = serverConfigs.SMTP;
-const UI_URL = 'http://localhost:3000/water-tracker-app';
 
 class SmtpEmail {
   #transporter;
