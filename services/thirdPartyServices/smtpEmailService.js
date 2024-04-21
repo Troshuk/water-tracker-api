@@ -7,6 +7,7 @@ import serverConfigs from '../../configs/serverConfigs.js';
 
 const { BASE_API_URL, APP_NAME } = serverConfigs.APP;
 const { HOST, USERNAME, PASSWORD, PORT, FROM } = serverConfigs.SMTP;
+const UI_URL = 'http://localhost:3000/water-tracker-app';
 
 class SmtpEmail {
   #transporter;
@@ -49,7 +50,7 @@ class SmtpEmail {
       to,
       'emailConfirmation',
       `Your email verification for ${APP_NAME}`,
-      { url: `${BASE_API_URL}/users/verify/${token}` }
+      { url: `${UI_URL}/verify/${token}` }
     );
   }
 
@@ -59,7 +60,7 @@ class SmtpEmail {
       'resetPassword',
       `Reset Password for ${APP_NAME}`,
       {
-        url: `${BASE_API_URL}/users/password/reset/${token}`,
+        url: `${UI_URL}/password/reset/${token}`,
       }
     );
   }
