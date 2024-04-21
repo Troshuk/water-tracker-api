@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-
+import 'dotenv/config.js';
 import catchErrors from '../decorators/catchErrors.js';
 import HttpError from '../helpers/HttpError.js';
 import userService from '../services/modelServices/UserService.js';
@@ -8,6 +8,8 @@ import cloudinaryService from '../services/thirdPartyServices/cloudinaryService.
 import fileService from '../services/fileService.js';
 import smtpEmailService from '../services/thirdPartyServices/smtpEmailService.js';
 import WaterConsumptionService from '../services/modelServices/WaterConsumptionService.js';
+
+const { CONFIRM_EMAIL_URL } = process.env;
 
 const getUserId = (req) => req.user._id;
 
@@ -37,7 +39,7 @@ export const verifyUser = catchErrors(async (req, res) => {
     throw new HttpError(StatusCodes.NOT_FOUND, 'Verification token is invalid');
   }
 
-  res.json({ message: 'Your email has been successfully verified' });
+  res.json(CONFIRM_EMAIL_URL);
 });
 
 export const forgotPassword = catchErrors(async ({ body: { email } }, res) => {
