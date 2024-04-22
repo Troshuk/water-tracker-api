@@ -90,8 +90,12 @@ export const updateUserAvatar = catchErrors(async (req, res) => {
 });
 
 export const updateUser = catchErrors(async (req, res) => {
-  const { old_password, dailyWaterGoal } = req.body;
-  const { timezone: timeZone } = req.user;
+  const { old_password, dailyWaterGoal, email } = req.body;
+  const { timezone: timeZone, email: currentEmail } = req.user;
+
+  if (email !== currentEmail && (await userService.checkIfExists({ email }))) {
+    throw new HttpError(StatusCodes.CONFLICT, 'Email is already in use');
+  }
 
   // If we are updating password check if old password is valid
   if (old_password) {
