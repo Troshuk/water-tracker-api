@@ -100,7 +100,10 @@ export const getWaterToday = catchErrors(async (req, res) => {
   const totalConsumed = water.reduce((acc, entry) => acc + entry.value, 0);
 
   res.json({
-    consumptionPercentage: Math.round((totalConsumed / dailyWaterGoal) * 100),
+    consumptionPercentage:
+      totalConsumed <= dailyWaterGoal
+        ? Math.round((totalConsumed / dailyWaterGoal) * 100)
+        : 100,
     consumption: water.map(transformWaterConsumption),
   });
 });

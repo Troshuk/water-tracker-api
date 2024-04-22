@@ -65,8 +65,25 @@ class WaterService extends BaseModelService {
       {
         $addFields: {
           consumptionPercentage: {
-            $trunc: {
-              $multiply: [{ $divide: ['$totalValue', '$dailyWaterGoal'] }, 100],
+            $let: {
+              vars: {
+                totalValue: '$totalValue',
+                dailyWaterGoal: '$dailyWaterGoal',
+              },
+              in: {
+                $trunc: {
+                  $cond: [
+                    { $gte: ['$totalValue', '$dailyWaterGoal'] },
+                    100,
+                    {
+                      $multiply: [
+                        { $divide: ['$totalValue', '$dailyWaterGoal'] },
+                        100,
+                      ],
+                    },
+                  ],
+                },
+              },
             },
           },
         },
