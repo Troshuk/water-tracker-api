@@ -33,8 +33,11 @@ class WaterService extends BaseModelService {
     });
   }
 
-  getWaterForUserForDateTimeRange(owner, fromDate, toDate) {
-    return this.getWaterForUserByDateRange(owner, fromDate, toDate);
+  getFirstWaterForUserForDateRange(owner, fromDate, toDate) {
+    return this.Model.findOne({
+      owner,
+      consumed_at: { $gte: fromDate, $lte: toDate },
+    });
   }
 
   getStatisticsByDateRange(owner, fromDate, toDate, timezone) {

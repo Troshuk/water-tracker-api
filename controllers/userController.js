@@ -90,7 +90,7 @@ export const updateUserAvatar = catchErrors(async (req, res) => {
 });
 
 export const updateUser = catchErrors(async (req, res) => {
-  const { old_password, dailyWaterGoal, email } = req.body;
+  const { old_password, dailyWaterGoal, email, viewingDate } = req.body;
   const { timezone: timeZone, email: currentEmail } = req.user;
 
   if (email !== currentEmail && (await userService.checkIfExists({ email }))) {
@@ -110,20 +110,28 @@ export const updateUser = catchErrors(async (req, res) => {
     delete req.body.old_password;
   }
 
+  // If viewing date is present, don't update current water goal for user
+  if (dailyWaterGoal && viewingDate) {
+    delete req.body.dailyWaterGoal;
+  }
+
   const user = await userService.update(getUserId(req), req.body);
 
   // Once we updated user's daily goal, make sure that all created records for today are upadted too
   if (dailyWaterGoal) {
-    const currentUsersDate = new Date().toLocaleString('en-US', { timeZone });
+    // If viewing day present, update it for that day
+    const dateToUpdate = viewingDate ? new Date(viewingDate) : new Date();
+    const usersDate = dateToUpdate.toLocaleString('en-US', { timeZone });
 
-    const startDate = new Date(currentUsersDate);
+    const startDate = new Date(usersDate);
     startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(usersDate);
+    endDate.setHours(23, 59, 59, 999);
 
     await WaterConsumptionService.updateWaterForUser(
       getUserId(req),
-      {
-        consumed_at: { $gte: startDate },
-      },
+      { consumed_at: { $gte: startDate, $lte: endDate } },
       { dailyWaterGoal }
     );
   }

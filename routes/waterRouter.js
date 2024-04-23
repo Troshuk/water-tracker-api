@@ -8,6 +8,7 @@ import {
 import {
   createWaterConsumptionSchema,
   updateWaterConsumptionSchema,
+  waterConsumptionDate,
   waterConsumptionParamsDayRange,
 } from '../validationSchemas/waterConsumptionSchemas.js';
 import {
@@ -16,6 +17,7 @@ import {
   getAllConsumedWater,
   getWaterByDateRange,
   getWaterById,
+  getWaterForDay,
   getWaterToday,
   updateConsumedWaterById,
 } from '../controllers/waterConsumptionController.js';
@@ -35,6 +37,11 @@ waterRouter
   .patch(validateBody(updateWaterConsumptionSchema), updateConsumedWaterById);
 
 waterRouter.get('/today', getWaterToday);
+waterRouter.get(
+  '/day/:date',
+  validateParams(waterConsumptionDate),
+  getWaterForDay
+);
 waterRouter.get(
   '/statistics/:startDate/:endDate',
   validateParams(waterConsumptionParamsDayRange),
