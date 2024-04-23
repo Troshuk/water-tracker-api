@@ -606,6 +606,48 @@
         }
       }
     },
+    "/water/day/{date}": {
+      "get": {
+        "tags": ["Water"],
+        "summary": "Get water consumption statistic information specific day",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "date",
+            "required": true,
+            "description": "Date and time in UTC",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/Models/WaterStatistics/ConsumptionPercentage"
+                    },
+                    {
+                      "$ref": "#/components/Models/WaterStatistics/Consumption"
+                    },
+                    { "$ref": "#/components/Models/User/DailyWaterGoal" }
+                  ]
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Error401" },
+          "404": { "$ref": "#/components/responses/Error404" },
+          "500": { "$ref": "#/components/responses/Error500" }
+        }
+      }
+    },
     "/water/statistics/{startDateTime}/{endDateTime}": {
       "get": {
         "tags": ["Water"],

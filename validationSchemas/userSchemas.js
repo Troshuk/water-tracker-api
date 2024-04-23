@@ -74,4 +74,5 @@ export const updatePasswordSchema = Joi.object({
 
 export const waterDailySchema = Joi.object({
   dailyWaterGoal: user.dailyWaterGoal.required(),
+  viewingDate: Joi.date().iso(),
 });

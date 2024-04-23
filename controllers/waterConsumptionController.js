@@ -9,11 +9,38 @@ import catchErrors from '../decorators/catchErrors.js';
 import waterService from '../services/modelServices/WaterConsumptionService.js';
 
 export const addWater = catchErrors(async (req, res) => {
-  const { id, dailyWaterGoal } = req.user;
+  const { id, dailyWaterGoal, timezone: timeZone } = req.user;
+  const { consumed_at } = req.body;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const consumedAt = new Date(consumed_at);
+
+  // If passed day is before today, check if any records for this day already exist
+  if (consumedAt < today) {
+    const usersDate = consumedAt.toLocaleString('en-US', { timeZone });
+
+    const startDate = new Date(usersDate);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(usersDate);
+    endDate.setHours(23, 59, 59, 999);
+
+    const consumption = await waterService.getFirstWaterForUserForDateRange(
+      id,
+      startDate,
+      endDate
+    );
+
+    // If we found one record, take it's dailyWaterGoal and use it for this record
+    if (consumption) {
+      req.body.dailyWaterGoal = consumption.dailyWaterGoal;
+    }
+  }
 
   const addedWater = await waterService.addWaterForUser(id, {
-    ...req.body,
     dailyWaterGoal,
+    ...req.body,
   });
 
   res.status(StatusCodes.CREATED).json(transformWaterConsumption(addedWater));
@@ -80,8 +107,7 @@ export const getAllConsumedWater = catchErrors(async (req, res) => {
 });
 
 export const getWaterToday = catchErrors(async (req, res) => {
-  const { dailyWaterGoal, timezone: timeZone } = req.user;
-  const { _id: owner } = req.user;
+  const { dailyWaterGoal, timezone: timeZone, _id: owner } = req.user;
 
   const currentUsersDate = new Date().toLocaleString('en-US', { timeZone });
 
@@ -91,7 +117,7 @@ export const getWaterToday = catchErrors(async (req, res) => {
   const endDate = new Date(currentUsersDate);
   endDate.setHours(23, 59, 59, 999);
 
-  const water = await waterService.getWaterForUserForDateTimeRange(
+  const water = await waterService.getWaterForUserByDateRange(
     owner,
     startDate,
     endDate
@@ -105,6 +131,38 @@ export const getWaterToday = catchErrors(async (req, res) => {
         ? Math.round((totalConsumed / dailyWaterGoal) * 100)
         : 100,
     consumption: water.map(transformWaterConsumption),
+  });
+});
+
+export const getWaterForDay = catchErrors(async (req, res) => {
+  const { dailyWaterGoal, timezone: timeZone, _id: owner } = req.user;
+  const { date } = req.params;
+
+  const usersDate = new Date(date).toLocaleString('en-US', { timeZone });
+
+  const startDate = new Date(usersDate);
+  startDate.setHours(0, 0, 0, 0);
+
+  const endDate = new Date(usersDate);
+  endDate.setHours(23, 59, 59, 999);
+
+  const water = await waterService.getWaterForUserByDateRange(
+    owner,
+    startDate,
+    endDate
+  );
+
+  const totalConsumed = water.reduce((acc, entry) => acc + entry.value, 0);
+
+  const waterGoal = water?.[0]?.dailyWaterGoal ?? dailyWaterGoal;
+
+  res.json({
+    consumptionPercentage:
+      totalConsumed <= waterGoal
+        ? Math.round((totalConsumed / waterGoal) * 100)
+        : 100,
+    consumption: water.map(transformWaterConsumption),
+    dailyWaterGoal: waterGoal,
   });
 });
 

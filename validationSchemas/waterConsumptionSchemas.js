@@ -26,6 +26,10 @@ export const waterConsumptionParamsDayRange = Joi.object({
   endDate: Joi.date().iso(),
 });
 
+export const waterConsumptionDate = Joi.object({
+  date: Joi.date().iso(),
+});
+
 export const updateWaterConsumptionSchema = Joi.object({
   ...waterConsumption,
 })
