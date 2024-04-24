@@ -16,10 +16,17 @@ import serverConfigs from './configs/serverConfigs.js';
 
 const app = express();
 
-const { ENV, PORT } = serverConfigs.APP;
+const { ENV, PORT, BASE_API_URL } = serverConfigs.APP;
 const { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } = serverConfigs.DB;
 
-if (ENV === envTypes.DEVELOPMENT) app.use(morgan('dev'));
+if (ENV === envTypes.DEVELOPMENT) {
+  app.use(morgan('dev'));
+
+  swaggerDoc.servers.push({
+    url: BASE_API_URL,
+    description: 'Development Server',
+  });
+}
 
 app.use(cors());
 app.use(express.json());

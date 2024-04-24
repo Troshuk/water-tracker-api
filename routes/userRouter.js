@@ -12,6 +12,7 @@ import {
 import {
   authenticateUser,
   createUser,
+  deleteUserAvatar,
   forgotPassword,
   getCurrentUser,
   removeToken,
@@ -55,12 +56,14 @@ router
   .get(getCurrentUser)
   .patch(validateBody(updateUserSchema), updateUser);
 
-router.patch(
-  '/avatar',
-  imageMiddleware.single('avatar'),
-  validateFile('avatar'),
-  updateUserAvatar
-);
+router
+  .route('/avatar')
+  .delete(deleteUserAvatar)
+  .patch(
+    imageMiddleware.single('avatar'),
+    validateFile('avatar'),
+    updateUserAvatar
+  );
 
 // Water
 router.patch('/water/goal', validateBody(waterDailySchema), updateUser);

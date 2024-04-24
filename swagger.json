@@ -12,8 +12,10 @@
   "consumes": ["application/json", "multiplart/form-data"],
   "produces": ["application/json"],
   "servers": [
-    { "url": "https://water-tracker-api.onrender.com/api" },
-    { "url": "http://localhost:3001/api" }
+    {
+      "url": "https://water-tracker-api.onrender.com/api",
+      "description": "Production Server"
+    }
   ],
   "tags": [
     {
@@ -358,10 +360,10 @@
       "patch": {
         "security": [{ "Bearer": [] }],
         "tags": ["User"],
-        "summary": "Update User",
+        "summary": "Update User's Avatar",
         "requestBody": {
           "required": true,
-          "description": "Update information about user",
+          "description": "Update user's avatar",
           "content": {
             "multiplart/form-data": {
               "schema": {
@@ -386,6 +388,24 @@
             }
           },
           "400": { "$ref": "#/components/responses/Error400" },
+          "401": { "$ref": "#/components/responses/Error401" },
+          "404": { "$ref": "#/components/responses/Error404" },
+          "500": { "$ref": "#/components/responses/Error500" }
+        }
+      },
+      "delete": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["User"],
+        "summary": "Delete User's Avatar",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserResponse" }
+              }
+            }
+          },
           "401": { "$ref": "#/components/responses/Error401" },
           "404": { "$ref": "#/components/responses/Error404" },
           "500": { "$ref": "#/components/responses/Error500" }

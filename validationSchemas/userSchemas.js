@@ -18,7 +18,7 @@ const isValidTimezone = (value, helpers) => {
 const emailOptions = { minDomainSegments: 2, tlds: { allow: ['com', 'net'] } };
 
 const user = {
-  name: Joi.string().max(32),
+  name: Joi.string().max(32).allow(null, ''),
   email: Joi.string().email(emailOptions).messages({
     'string.email':
       'The {{#label}} field format is invalid. At least 2 domain segments required. Only these TLDS allowed: com, net',

@@ -23,6 +23,17 @@ const upload = async (fromPath, toFolder) => {
   return url;
 };
 
+const destroy = async (url) => {
+  const publicId = `${CLOUDINARY_FOLDER}/${
+    url.split(`/${CLOUDINARY_FOLDER}/`).pop().split('.')[0]
+  }`;
+
+  const res = await cloudinary.v2.uploader.destroy(publicId);
+
+  return res?.result === 'ok';
+};
+
 export default {
   upload,
+  destroy,
 };

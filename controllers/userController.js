@@ -78,6 +78,10 @@ export const getCurrentUser = catchErrors(({ user }, res) => {
 export const updateUserAvatar = catchErrors(async (req, res) => {
   const { path } = req.file;
 
+  if (req.user.avatarURL) {
+    await cloudinaryService.destroy(req.user.avatarURL);
+  }
+
   await fileService.imageResize(path);
 
   const avatarURL = await cloudinaryService.upload(path, 'users/avatars');
@@ -87,6 +91,17 @@ export const updateUserAvatar = catchErrors(async (req, res) => {
   const user = await userService.update(getUserId(req), { avatarURL });
 
   res.json(transformUser(user));
+});
+
+export const deleteUserAvatar = catchErrors(async (req, res) => {
+  const { avatarURL } = req.user;
+
+  if (avatarURL) {
+    await cloudinaryService.destroy(avatarURL);
+    req.user = await userService.update(getUserId(req), { avatarURL: null });
+  }
+
+  res.json(transformUser(req.user));
 });
 
 export const updateUser = catchErrors(async (req, res) => {
