@@ -112,19 +112,9 @@ export const getWaterToday = catchErrors(async (req, res) => {
   const { dailyWaterGoal, timezone: timeZone, _id: owner } = req.user;
 
   const usersDate = moment().tz(timeZone);
-  console.log('usersDate :>> ', usersDate);
 
-  const start = usersDate.startOf('day').toISOString();
-  console.log('start', start);
-
-  const end = usersDate.endOf('day').toISOString();
-  console.log('end', end);
-
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-
-  console.log('startDate :>> ', startDate);
-  console.log('endDate :>> ', endDate);
+  const startDate = new Date(usersDate.startOf('day').toISOString());
+  const endDate = new Date(usersDate.endOf('day').toISOString());
 
   const water = await waterService.getWaterForUserByDateRange(
     owner,
@@ -147,13 +137,14 @@ export const getWaterForDay = catchErrors(async (req, res) => {
   const { dailyWaterGoal, timezone: timeZone, _id: owner } = req.user;
   const { date } = req.params;
 
-  const usersDate = new Date(date).toLocaleString('en-US', { timeZone });
+  console.log('date :>> ', date);
+  const usersDate = moment(date).tz(timeZone);
+  console.log('usersDate :>> ', usersDate);
 
-  const startDate = new Date(usersDate);
-  startDate.setHours(0, 0, 0, 0);
-
-  const endDate = new Date(usersDate);
-  endDate.setHours(23, 59, 59, 999);
+  const startDate = new Date(usersDate.startOf('day').toISOString());
+  const endDate = new Date(usersDate.endOf('day').toISOString());
+  console.log('startDate :>> ', startDate);
+  console.log('endDate :>> ', endDate);
 
   const water = await waterService.getWaterForUserByDateRange(
     owner,
