@@ -138,7 +138,7 @@ export const getWaterForDay = catchErrors(async (req, res) => {
   const { dailyWaterGoal, timezone: timeZone, _id: owner } = req.user;
   const { date } = req.params;
 
-  const usersDate = new Date(date);
+  const usersDate = new Date(date).toLocaleString('en-US', { timeZone: 'UTC' });
 
   const startDate = new Date(usersDate);
   startDate.setHours(0, 0, 0, 0);
