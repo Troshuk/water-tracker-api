@@ -111,11 +111,21 @@ export const getWaterToday = catchErrors(async (req, res) => {
 
   const usersDate = new Date();
 
+  console.log('usersDate :>> ', usersDate);
+
   usersDate.setHours(0, 0, 0, 0);
+
+  console.log('usersDate :>> ', usersDate);
   const startDate = new Date(usersDate.toLocaleString('en-US', { timeZone }));
 
+  console.log('startDate :>> ', startDate);
+
   usersDate.setHours(23, 59, 59, 999);
+
+  console.log('usersDate :>> ', usersDate);
   const endDate = new Date(usersDate.toLocaleString('en-US', { timeZone }));
+
+  console.log('endDate :>> ', endDate);
 
   const water = await waterService.getWaterForUserByDateRange(
     owner,
