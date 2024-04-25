@@ -116,14 +116,14 @@ export const getWaterToday = catchErrors(async (req, res) => {
   usersDate.setHours(0, 0, 0, 0);
 
   console.log('usersDate :>> ', usersDate);
-  const startDate = new Date(usersDate);
+  const startDate = new Date(usersDate.toISOString());
 
   console.log('startDate :>> ', startDate);
 
   usersDate.setHours(23, 59, 59, 999);
 
   console.log('usersDate :>> ', usersDate);
-  const endDate = new Date(usersDate);
+  const endDate = new Date(usersDate.toISOString());
 
   console.log('endDate :>> ', endDate);
 
