@@ -109,21 +109,21 @@ export const getAllConsumedWater = catchErrors(async (req, res) => {
 export const getWaterToday = catchErrors(async (req, res) => {
   const { dailyWaterGoal, timezone: timeZone, _id: owner } = req.user;
 
-  const usersDate = new Date();
+  const usersDate = new Date(new Date().toLocaleString('en-US', { timeZone }));
 
   console.log('usersDate :>> ', usersDate);
 
   usersDate.setHours(0, 0, 0, 0);
 
   console.log('usersDate :>> ', usersDate);
-  const startDate = new Date(usersDate.toLocaleString('en-US', { timeZone }));
+  const startDate = new Date(usersDate);
 
   console.log('startDate :>> ', startDate);
 
   usersDate.setHours(23, 59, 59, 999);
 
   console.log('usersDate :>> ', usersDate);
-  const endDate = new Date(usersDate.toLocaleString('en-US', { timeZone }));
+  const endDate = new Date(usersDate);
 
   console.log('endDate :>> ', endDate);
 
