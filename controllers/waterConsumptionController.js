@@ -1,4 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
+import moment from 'moment-timezone';
+
 import HttpError from '../helpers/HttpError.js';
 import {
   transformWaterConsumption,
@@ -109,22 +111,19 @@ export const getAllConsumedWater = catchErrors(async (req, res) => {
 export const getWaterToday = catchErrors(async (req, res) => {
   const { dailyWaterGoal, timezone: timeZone, _id: owner } = req.user;
 
-  const usersDate = new Date(new Date().toLocaleString('en-US', { timeZone }));
-
+  const usersDate = moment().tz(timeZone);
   console.log('usersDate :>> ', usersDate);
 
-  usersDate.setHours(0, 0, 0, 0);
+  const start = usersDate.startOf('day').toISOString();
+  console.log('start', start);
 
-  console.log('usersDate :>> ', usersDate);
-  const startDate = new Date(usersDate.toISOString());
+  const end = usersDate.endOf('day').toISOString();
+  console.log('end', end);
+
+  const startDate = new Date(start);
+  const endDate = new Date(end);
 
   console.log('startDate :>> ', startDate);
-
-  usersDate.setHours(23, 59, 59, 999);
-
-  console.log('usersDate :>> ', usersDate);
-  const endDate = new Date(usersDate.toISOString());
-
   console.log('endDate :>> ', endDate);
 
   const water = await waterService.getWaterForUserByDateRange(
