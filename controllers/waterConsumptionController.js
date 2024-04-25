@@ -146,8 +146,6 @@ export const getWaterForDay = catchErrors(async (req, res) => {
   const endDate = new Date(usersDate);
   endDate.setHours(23, 59, 59, 999);
 
-  console.log(usersDate, startDate, endDate);
-
   const water = await waterService.getWaterForUserByDateRange(
     owner,
     startDate,
