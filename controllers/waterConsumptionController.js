@@ -138,7 +138,7 @@ export const getWaterForDay = catchErrors(async (req, res) => {
   const { dailyWaterGoal, timezone: timeZone, _id: owner } = req.user;
   const { date } = req.params;
 
-  const usersDate = new Date(date).toLocaleString('en-US', { timeZone: 'UTC' });
+  const usersDate = new Date(date).toLocaleString('en-US', { timeZone });
 
   const startDate = new Date(usersDate);
   startDate.setHours(0, 0, 0, 0);
@@ -146,20 +146,12 @@ export const getWaterForDay = catchErrors(async (req, res) => {
   const endDate = new Date(usersDate);
   endDate.setHours(23, 59, 59, 999);
 
-  // const usersDate = new Date(date);
-
-  // usersDate.setHours(0, 0, 0, 0);
-  // const startDate = new Date(usersDate);
-
-  // usersDate.setHours(23, 59, 59, 999);
-  // const endDate = new Date(usersDate.toLocaleString('en-US', { timeZone }));
-
   console.log(usersDate, startDate, endDate);
 
   const water = await waterService.getWaterForUserByDateRange(
     owner,
-    new Date(startDate),
-    new Date(endDate)
+    startDate,
+    endDate
   );
 
   const totalConsumed = water.reduce((acc, entry) => acc + entry.value, 0);
