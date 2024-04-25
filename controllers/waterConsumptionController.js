@@ -109,13 +109,23 @@ export const getAllConsumedWater = catchErrors(async (req, res) => {
 export const getWaterToday = catchErrors(async (req, res) => {
   const { dailyWaterGoal, timezone: timeZone, _id: owner } = req.user;
 
-  const currentUsersDate = new Date().toLocaleString('en-US', { timeZone });
+  // const currentUsersDate = new Date().toLocaleString('en-US', { timeZone });
 
-  const startDate = new Date(currentUsersDate);
-  startDate.setHours(0, 0, 0, 0);
+  // const startDate = new Date(currentUsersDate);
+  // startDate.setHours(0, 0, 0, 0);
 
-  const endDate = new Date(currentUsersDate);
-  endDate.setHours(23, 59, 59, 999);
+  // const endDate = new Date(currentUsersDate);
+  // endDate.setHours(23, 59, 59, 999);
+
+  const usersDate = new Date();
+
+  usersDate.setHours(0, 0, 0, 0);
+  const startDate = new Date(usersDate.toLocaleString('en-US', { timeZone }));
+
+  usersDate.setHours(23, 59, 59, 999);
+  const endDate = new Date(usersDate.toLocaleString('en-US', { timeZone }));
+
+  console.log(usersDate, startDate, endDate);
 
   const water = await waterService.getWaterForUserByDateRange(
     owner,
@@ -138,13 +148,23 @@ export const getWaterForDay = catchErrors(async (req, res) => {
   const { dailyWaterGoal, timezone: timeZone, _id: owner } = req.user;
   const { date } = req.params;
 
-  const usersDate = new Date(date).toLocaleString('en-US', { timeZone });
+  // const usersDate = new Date(date).toLocaleString('en-US', { timeZone });
 
-  const startDate = new Date(usersDate);
-  startDate.setHours(0, 0, 0, 0);
+  // const startDate = new Date(usersDate);
+  // startDate.setHours(0, 0, 0, 0);
 
-  const endDate = new Date(usersDate);
-  endDate.setHours(23, 59, 59, 999);
+  // const endDate = new Date(usersDate);
+  // endDate.setHours(23, 59, 59, 999);
+
+  const usersDate = new Date(date);
+
+  usersDate.setHours(0, 0, 0, 0);
+  const startDate = new Date(usersDate.toLocaleString('en-US', { timeZone }));
+
+  usersDate.setHours(23, 59, 59, 999);
+  const endDate = new Date(usersDate.toLocaleString('en-US', { timeZone }));
+
+  console.log(usersDate, startDate, endDate);
 
   const water = await waterService.getWaterForUserByDateRange(
     owner,
