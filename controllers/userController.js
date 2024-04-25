@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+import moment from 'moment-timezone';
 
 import catchErrors from '../decorators/catchErrors.js';
 import HttpError from '../helpers/HttpError.js';
@@ -135,14 +136,12 @@ export const updateUser = catchErrors(async (req, res) => {
   // Once we updated user's daily goal, make sure that all created records for today are upadted too
   if (dailyWaterGoal) {
     // If viewing day present, update it for that day
-    const dateToUpdate = viewingDate ? new Date(viewingDate) : new Date();
-    const usersDate = dateToUpdate.toLocaleString('en-US', { timeZone });
+    const usersDate = (viewingDate ? moment(viewingDate) : moment()).tz(
+      timeZone
+    );
 
-    const startDate = new Date(usersDate);
-    startDate.setHours(0, 0, 0, 0);
-
-    const endDate = new Date(usersDate);
-    endDate.setHours(23, 59, 59, 999);
+    const startDate = new Date(usersDate.startOf('day').toISOString());
+    const endDate = new Date(usersDate.endOf('day').toISOString());
 
     await WaterConsumptionService.updateWaterForUser(
       getUserId(req),

@@ -14,19 +14,14 @@ export const addWater = catchErrors(async (req, res) => {
   const { id, dailyWaterGoal, timezone: timeZone } = req.user;
   const { consumed_at } = req.body;
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const consumedAt = new Date(consumed_at);
+  const today = new Date(moment().tz(timeZone));
+  const consumedAt = new Date(moment(consumed_at).tz(timeZone).toISOString());
 
   // If passed day is before today, check if any records for this day already exist
   if (consumedAt < today) {
-    const usersDate = consumedAt.toLocaleString('en-US', { timeZone });
-
-    const startDate = new Date(usersDate);
-    startDate.setHours(0, 0, 0, 0);
-
-    const endDate = new Date(usersDate);
-    endDate.setHours(23, 59, 59, 999);
+    const usersDate = moment(consumed_at).tz(timeZone);
+    const startDate = new Date(usersDate.startOf('day').toISOString());
+    const endDate = new Date(usersDate.endOf('day').toISOString());
 
     const consumption = await waterService.getFirstWaterForUserForDateRange(
       id,
@@ -137,14 +132,10 @@ export const getWaterForDay = catchErrors(async (req, res) => {
   const { dailyWaterGoal, timezone: timeZone, _id: owner } = req.user;
   const { date } = req.params;
 
-  console.log('date :>> ', date);
   const usersDate = moment(date).tz(timeZone);
-  console.log('usersDate :>> ', usersDate);
 
   const startDate = new Date(usersDate.startOf('day').toISOString());
   const endDate = new Date(usersDate.endOf('day').toISOString());
-  console.log('startDate :>> ', startDate);
-  console.log('endDate :>> ', endDate);
 
   const water = await waterService.getWaterForUserByDateRange(
     owner,
